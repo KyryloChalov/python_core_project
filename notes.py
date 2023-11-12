@@ -91,14 +91,16 @@ class NotesBook(UserDict):
         return result if result else "No matching notes found."
 
 
-@user_error
+
+notes = NotesBook()
+# @user_error
 def add_tag(*args):
     title = args[0]
     tags = args[1:]
     return notes.add_tags(title, tags)
 
 
-@user_error
+# @user_error
 def search_notes_by_tag(*args):
     tag = args[0]
     sort_by_keywords = args[1:].lower() == "true" if len(args) > 1 else False
@@ -112,38 +114,41 @@ def add_note(*args):
     content_start_index = 1
     tags = []
     #  теги в аргументах
-    for i, arg in enumerate(args[1:]):
-        if arg.startswith("-tags="):
-            tags = arg.split("=")[1].split(",")
-            content_start_index = i + 1
-            break
     content = " ".join(args[content_start_index:])
-    new_note = Note(title, content, tags)
-    notes.notes[title] = new_note
-    return f"Note '{title}' added."
-
-
-@user_error
-def edit_note(*args):
-    title = args[0]
-    new_content_start_index = 1
-    tags = []
-    # теги в аргументах
-    for i, arg in enumerate(args[1:]):
+    for i, arg in enumerate(args[content_start_index:], start=content_start_index):
         if arg.startswith("--tags="):
             tags = arg.split("=")[1].split(",")
-            new_content_start_index = i + 1
+            content = " ".join(args[content_start_index:i])
             break
-    new_content = " ".join(args[new_content_start_index:])
+    #content = " ".join(args[content_start_index:args.index(f"--tags={+tags[0]}") if tags else len(args)])
+    new_note = Note(title, content, tags)
+    notes.notes[title] = new_note
+    return f"Note 'Title: {title} Content:{content} Tags:{', '.join(tags)}' added."
+
+
+# @user_error
+def edit_note(*args):
+    title = args[0]
+    content_start_index = 1
+    tags = []
+
+    for i, arg in enumerate(args[content_start_index:], start=content_start_index):
+        if arg.startswith("--tags="):
+            tags = arg.split("=")[1].split(",")
+            content = " ".join(args[content_start_index:i])
+            break
+    else:
+        content = " ".join(args[content_start_index:])
+
     if title in notes.notes:
-        notes.notes[title].content.edit_content(new_content)
+        notes.notes[title].content.edit_content(content)
         notes.notes[title].tags = Tags(tags)
-        return f"Note '{title}' edited."
+        return f"Note 'Title: {title} Content:{content} edited."
     else:
         return f"Note '{title}' not found."
 
 
-@user_error
+# @user_error
 def search_notes(*keywords, notes):
     matching_notes = [
         f"Title: {title}\nContent: {note['content']}\nTags: {', '.join(note['tags'])}"
@@ -160,7 +165,7 @@ def search_notes(*keywords, notes):
         return "No matching notes found."
 
 
-@user_error
+# @user_error
 def delete_note(*args):
     title = args[0]
     if title in notes.notes:
@@ -168,6 +173,9 @@ def delete_note(*args):
         return f"Note '{title}' deleted."
     else:
         return f"Note '{title}' not found."
+    
+    
+
 
 
 # from collections import UserDict
@@ -219,3 +227,12 @@ def delete_note(*args):
 #             if keyword.lower() in title.lower() or keyword.lower() in content.lower():
 #                 result.append(f"Title: {title}\nContent: {content}\n")
 #         return result if result else "No matching notes found."
+if __name__ == "__main__":
+    print(add_note("Заголовок", "Зміст нотатки", "--tags=тег1,тег2"))
+    print(edit_note("Заголовок", "привіт"))
+    # print(add_note("kkk "))
+    # print(add_note("kkk"))
+    # print(add_note("kkk"))
+    # print(add_note("kkk"))
+    # print(add_note("kkk"))
+    
