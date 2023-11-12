@@ -105,7 +105,8 @@ def search_notes_by_tag(*args):
     return notes.search_notes_by_tag(tag, sort_by_keywords)
 
 
-@user_error
+
+# @user_error
 def add_note(*args):
     title = args[0]
     content_start_index = 1
