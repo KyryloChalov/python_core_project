@@ -136,30 +136,26 @@ if __name__ == "__main__":
     print(GREEN + "\n     додаємо кілька нових контактів" + RESET)
     print(add_contact("Person_0", "(099)475-71-22"))
     print(add_contact("Person_9", "(099)475-31-11"))
-    print(add_contact("Person_1", "(066)4525588", "10-11-1998"))
+    print(add_contact("Person_1", "(066)4525588", "14-11-1998"))
     print(add_contact("Person_7", "099 225 55 66", "22-04-1870"))
-    print(add_contact("Person_2", "0675468899", "0997061212", "11-11-2001"))
-    print(add_contact("Person_6", "0987654321", "09-11-1999"))
-    print(add_contact("Person_3", "+38(098)221-15-44", "14-08-1988"))
+    print(add_contact("Person_2", "0675468899", "0997061212", "16-11-2001"))
+    print(add_contact("Person_6", "0987654321", "15-11-1999"))
+    print(add_contact("Person_3", "+38(098)221-15-44", "14-11-1988"))
     print(add_contact("Person_8", "0958645548", "08-11-1967"))
     print(add_contact("Person_4", "+380664589955", "07-11-1968"))
     print(add_contact("Person_5", "674567890", "0660554488"))
 
-    print(
-        GREEN
-        + "     а тепер додаємо контакту, що НЕ існує номер телефону"
-        + RESET
-    )
+    print(GREEN + "     а тепер додаємо контакту, що НЕ існує номер телефону" + RESET)
     print(add_phones("Jill_e", "0677977155"))
-    
+
     print(GREEN + "\n     додаємо день народження контакту, що НЕ існує" + RESET)
     print(add_birthday("Jill_e", "28-03-1968"))
-
 
     print(GREEN + "\n     друкуємо список контактів по 10 рядків на сторінку" + RESET)
     # print(show_all(10)
 
     print(show_all())
 
-    result = get_birthdays_on_date(book)
+    print(GREEN + "\n     контакти, в яких день народження " + RESET)
+    result = get_birthdays_on_date(book, 7)
     print(result)
