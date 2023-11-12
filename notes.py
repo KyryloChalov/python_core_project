@@ -56,12 +56,12 @@ class NotesBook(UserDict):
     def __init__(self):
         self.notes = {}
 
-    def search_notes_by_tag(self, tag, sort_by_keywords=False):
-        matching_notes = [
-            f"Title: {title}\nContent: {note['content']}\nTags: {', '.join(note['tags'])}"
-            for title, note in self.notes.items()
-            if tag.lower() in map(str.lower, note["tags"])
-        ]
+    # def search_notes_by_tag(self, tag, sort_by_keywords=False):
+    #     matching_notes = [
+    #         f"Title: {title}\nContent: {note['content']}\nTags: {', '.join(note['tags'])}"
+    #         for title, note in self.notes.items()
+    #         if tag.lower() in map(str.lower, note["tags"])
+        #]
 
     def add_tags(self, title, tags):  # метод для додавання тегів
         if title in self.notes:
@@ -132,23 +132,24 @@ def add_note(*args):
 # @user_error
 def edit_note(*args):
     title = args[0]
-    content_start_index = 1
+    new_content_start_index = 1
     tags = []
-
-    for i, arg in enumerate(args[content_start_index:], start=content_start_index):
-        if arg.startswith("--tags="):
-            tags = arg.split("=")[1].split(",")
-            content = " ".join(args[content_start_index:i])
-            break
-    else:
-        content = " ".join(args[content_start_index:])
-
+    # теги в аргументах
+    new_content = " ".join(args[new_content_start_index:])
+    for i, arg in enumerate(args[new_content_start_index:], start=new_content_start_index):
+        if arg.startswith("#"):
+            tag = (
+                arg.lstrip("#, ").rstrip(", ").replace("#", "")
+            )  # видаляємо # і зайві пробіли
+            tags.append(tag)
+            new_content = " ".join(args[new_content_start_index:i])
     if title in notes.notes:
-        notes.notes[title].content.edit_content(content)
+        notes.notes[title].content.edit_content(new_content)
         notes.notes[title].tags = Tags(tags)
-        return f"Note 'Title: {title} Content:{content} edited."
+        return f"Note '{title}'Content:{new_content} edited."
     else:
         return f"Note '{title}' not found."
+
 
 
 # @user_error
@@ -229,7 +230,7 @@ def delete_note(*args):
 #         return result if result else "No matching notes found."
 if __name__ == "__main__":
     print(add_note("Заголовок", "Зміст нотатки", "#тег1,#тег2"))
-    print(edit_note("Заголовок", "привіт"))
+    print(edit_note("Заголовок", "маячня"))
     # print(add_note("kkk "))
     # print(add_note("kkk"))
     # print(add_note("kkk"))
