@@ -12,6 +12,8 @@ from main import (
     search,
     show_all,
     delete_record,
+    add_address,
+    add_email,
 )
 from get_birthday_on_date import get_birthdays_on_date
 
@@ -151,11 +153,26 @@ if __name__ == "__main__":
     print(GREEN + "\n     додаємо день народження контакту, що НЕ існує" + RESET)
     print(add_birthday("Jill_e", "28-03-1968"))
 
+    print(GREEN + "\n     додаємо e-mail'и" + RESET)
+    print(add_email("person_4", "person_4@gmail.com"))
+    print(add_email("person_4", "person_4_plus@gmail.com"))
+    print(add_email("person_5", "person_5@gmail.com"))
+    print(add_email("person_8", "person_8@gmail.com"))
+
+    print(GREEN + "\n     додаємо адресу" + RESET)
+    print(add_address("person_5", "Київ, пр.Берестейський, 73"))
+
+    print(GREEN + "\n     додаємо контакт в якого тільки ім'я" + RESET)
+    print(add_contact("helen"))
+
+    print(GREEN + "\n     додаємо йому e-mail" + RESET)
+    print(add_email("helen", "helen@gmail.com"))
+
     print(GREEN + "\n     друкуємо список контактів по 10 рядків на сторінку" + RESET)
     # print(show_all(10)
 
     print(show_all())
 
     print(GREEN + "\n     контакти, в яких день народження " + RESET)
-    result = get_birthdays_on_date(book, 7)
+    result = get_birthdays_on_date(book)
     print(result)
