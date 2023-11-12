@@ -116,10 +116,12 @@ def add_note(*args):
     #  теги в аргументах
     content = " ".join(args[content_start_index:])
     for i, arg in enumerate(args[content_start_index:], start=content_start_index):
-        if arg.startswith("--tags="):
-            tags = arg.split("=")[1].split(",")
+        if arg.startswith("#"):
+            tag = arg.lstrip("#, ").rstrip(", ").replace("#", "")  # видаляємо # і зайві пробіли
+            tags.append(tag)
             content = " ".join(args[content_start_index:i])
-            break
+    
+    
     #content = " ".join(args[content_start_index:args.index(f"--tags={+tags[0]}") if tags else len(args)])
     new_note = Note(title, content, tags)
     notes.notes[title] = new_note
@@ -228,7 +230,7 @@ def delete_note(*args):
 #                 result.append(f"Title: {title}\nContent: {content}\n")
 #         return result if result else "No matching notes found."
 if __name__ == "__main__":
-    print(add_note("Заголовок", "Зміст нотатки", "--tags=тег1,тег2"))
+    print(add_note("Заголовок", "Зміст нотатки", "#тег1,#тег2"))
     print(edit_note("Заголовок", "привіт"))
     # print(add_note("kkk "))
     # print(add_note("kkk"))
