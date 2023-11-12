@@ -122,7 +122,7 @@ class Address(Field):
         super().__init__(str(value).title())
 
     def __str__(self) -> str:
-        return f"{GRAY}  address: {RESET}{self.value}" if self.value else ""
+        return f"{GRAY}address: {RESET}{self.value}" if self.value else ""
 
 
 class Record:
@@ -262,21 +262,31 @@ class Record:
 
     def __str__(self) -> str:
         blanks = " " * (LEN_OF_NAME_FIELD - len(str(self.name)))
+        name_str = f"{self.name} {blanks}: "
+        phone_str = f"{', '.join(str(p) for p in self.phones)}"
+        
+        if self.birthday:
+            days_to_bd = int(self.days_to_birthday(self.birthday)[0])
+            data_bd_str = self.datetime_to_str(self.birthday)
+            years_bd = self.days_to_birthday(self.birthday)[1]
+            if days_to_bd == 0:
+                bd_str = f" {MAGENTA} birthday: {RESET}{data_bd_str} {MAGENTA}(today is {years_bd}th birthday){RESET}"
+            else:
+                color_bd = CYAN if (self.days_to_birthday(self.birthday)[0] <= 7) else GRAY
+                bd_str = f" {color_bd} birthday: {RESET}{data_bd_str} {color_bd}({days_to_bd} days until the {years_bd}th birthday){RESET}"
+        else:
+            bd_str = ""
+
         emails_str = (
-            f"\n\t\t\t{GRAY}e-mail(s): {RESET}" + ", ".join(str(e) for e in self.emails)
+            f"{GRAY}e-mail{"s" if len(self.emails) > 1 else ""}: {RESET}" + ", ".join(str(e) for e in self.emails) + "  "
             if self.emails
             else ""
         )
-        address_str = "\n\t\t\t" + str(self.address) if self.address else ""
-        if self.birthday:
-            if int(self.days_to_birthday(self.birthday)[0]) == 0:
-                return f"{self.name} {blanks}: {', '.join(str(p) for p in self.phones)} {MAGENTA} birthday: {RESET} {self.datetime_to_str(self.birthday)} {MAGENTA}(today is {self.days_to_birthday(self.birthday)[1]}th birthday){RESET}  {emails_str} {address_str}"
-            elif self.days_to_birthday(self.birthday)[0] <= 7:
-                return f"{self.name} {blanks}: {', '.join(str(p) for p in self.phones)} {CYAN} birthday: {RESET} {self.datetime_to_str(self.birthday)} {CYAN}({self.days_to_birthday(self.birthday)[0]} days until the {self.days_to_birthday(self.birthday)[1]}th birthday){RESET}  {emails_str} {address_str}"
-            else:
-                return f"{self.name} {blanks}: {', '.join(str(p) for p in self.phones)} {GRAY} birthday: {RESET} {self.datetime_to_str(self.birthday)} {GRAY}({self.days_to_birthday(self.birthday)[0]} days until the {self.days_to_birthday(self.birthday)[1]}th birthday){RESET}  {emails_str} {address_str}"
-        else:
-            return f"{self.name} {blanks}: {', '.join(str(p) for p in self.phones)} {emails_str} {address_str}"
+        address_str = str(self.address) if self.address else ""
+
+        new_line = "\n" + (" " * (LEN_OF_NAME_FIELD + 3)) if all([phone_str + bd_str != "", emails_str + address_str != ""]) else ""
+
+        return name_str + phone_str + bd_str + new_line + emails_str + address_str
 
     def __repr__(self) -> str:
         return str(self)
