@@ -130,25 +130,14 @@ def add_note(*args):
 
 
 # @user_error
-def edit_note(*args):
-    title = args[0]
-    new_content_start_index = 1
-    tags = []
-    # теги в аргументах
-    new_content = " ".join(args[new_content_start_index:])
-    for i, arg in enumerate(args[new_content_start_index:], start=new_content_start_index):
-        if arg.startswith("#"):
-            tag = (
-                arg.lstrip("#, ").rstrip(", ").replace("#", "")
-            )  # видаляємо # і зайві пробіли
-            tags.append(tag)
-            new_content = " ".join(args[new_content_start_index:i])
+def edit_note(title, new_content):
+    # Перевірка наявності тайтлу в notes
     if title in notes.notes:
+        # Змінюємо тільки content
         notes.notes[title].content.edit_content(new_content)
-        notes.notes[title].tags = Tags(tags)
-        return f"Note '{title}'Content:{new_content} edited."
+        return f"Note '{title}' changed. New content: '{new_content}'"
     else:
-        return f"Note '{title}' not found."
+        return f"Нотатка '{title}' не знайдена."
 
 
 
