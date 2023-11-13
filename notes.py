@@ -62,6 +62,11 @@ class Note:
             return f"Note '{title}' deleted."
         else:
             return f"Note '{title}' not found."
+        
+    def __str__(self) -> str:
+        tags_str = "".join(t.value for t in self.tags)
+        tags_str = f"Tags {tags_str}" if tags_str else ""
+        return f"Title: {self.title} Text: {self.content} {tags_str}"
 
 
 class NotesBook(UserDict):
@@ -101,6 +106,25 @@ class NotesBook(UserDict):
             if keyword.lower() in title.lower() or keyword.lower() in content.lower():
                 result.append(f"Title: {title}\nContent: {content}\n")
         return result if result else "No matching notes found."
+        
+    def read_notes_from_file(self, fn):
+        if os.path.exists(fn):
+            with open(fn, "rb") as fh:
+                self = pickle.load(fh)
+            self.data = dict(sorted(self.items()))
+        print(f"{GRAY}the notes has been successfully restored{RESET}")
+        return self
+
+    def write_notes_to_file(self, fn):
+        with open(fn, "wb") as fh:
+            pickle.dump(self, fh)
+        return f"{GRAY}the notes has been saved successfully{RESET}"
+    
+    def iterator(self, n=None):
+        counter = 0
+        while counter < len(self):
+            yield list(self.values())[counter : counter + n]
+            counter += n
 
 
 # notes = NotesBook()
