@@ -37,7 +37,9 @@ from notes import NotesBook, NoteError, Title, Content, Tags, Note
 
 from get_birthday_on_date import get_birthdays_on_date
 
-# from notes import NotesBook
+from prompt_toolkit.completion import NestedCompleter
+
+from prompt_toolkit import prompt
 
 from sort_path import sorting
 
@@ -277,19 +279,23 @@ def delete_note(*args):
         return f"Note '{title}' deleted."
     else:
         return f"Note '{title}' not found."
-    
-    
-def add_content(*args): # воно ж change_content
+
+
+def add_content(*args):  # воно ж change_content
     ...
-    
-def del_content(*args): # а воно треба???
+
+
+def del_content(*args):  # а воно треба???
     ...
+
 
 def change_tag(*args):
     ...
-    
+
+
 def delete_tag(*args):
     ...
+
 
 # --- Notes
 
@@ -355,43 +361,55 @@ def help_part(*args):
         help_list.append(HELP_LIST[i])
     return "\n".join(help_list)
 
+
 # ===== helps =====
-def help_page(*args):
+def help_page(*_):
     return help_part(range(len(HELP_LIST)))
 
-def add():
+
+def add(*_):
     return help_part(HELP_LIST_ADD)
 
-def change(*args):
+
+def change(*_):
     return help_part(HELP_LIST_EDIT)
 
-def delete(*args):
+
+def delete(*_):
     return help_part(HELP_LIST_DEL)
 
-def contact(*args):
+
+def contact(*_):
     return help_part(HELP_LIST_CONTACT)
 
-def phone(*args):
+
+def phone(*_):
     return help_part(HELP_LIST_PHONE)
 
-def note(*args):
+
+def note(*_):
     return help_part(HELP_LIST_NOTE)
 
-def find(*args):
+
+def find(*_):
     return help_part(HELP_LIST_FIND)
+
+
 # ===== helps =====
 
 
-def say_hello(*args):
-        return BLUE + TITLE + RESET + "\t\tType 'help' for information\n   How can I help you?"
+def say_hello(*_):
+    return (
+        BLUE + TITLE + RESET + "\t\tType 'help' for information\n   How can I help you?"
+    )
 
 
-def say_good_bay(*args):
+def say_good_bay(*_):
     print(book.write_contacts_to_file(FILENAME))
     exit("Good bye!")
 
 
-def unknown(*args):
+def unknown(*_):
     return f"{RED}Unknown command. Try again{RESET}"
 
 
@@ -447,74 +465,75 @@ def parser(text: str):
     return unknown, []
 
 
-from prompt_toolkit.completion import NestedCompleter
-
-# from terminal_tips import completer
-from prompt_toolkit import prompt
-
-# COMMANDS = dict(sorted(COMMANDS.keys(), reverse=True))
-
-
-def func_completer(CMD: dict):
+def func_completer(CMD):
     comp_dict = {}
-    # print(f"{CMD.values() = }")
-    # sorted_command = sorted(CMD.keys())
-    sorted_command = [
-        "add_address",
-        "add_contact",
-        "add_birthday",
-        "add_contact",
-        "add_email",
-        "add_note",
-        "add_phones",
-        "add_tag",
-        "change_name",
-        "change_phone",
-        "change_address",
-        "change_email",
-        "change_note",
-        "del_phone",
-        "delete_record",
-        "del_address",
-        "del_email",
-        "delete_note",
-        "edit_name",
-        "edit_phone",
-        "edit_address",
-        "edit_email",
-        "edit_note",
-        "get_birthdays_on_date",
-        "help",
-        "find_name",
-        "search",
-        "hello",
-        "show_all",
-        "show_notes",
-        "list",
-        "good_bay",
-        "by",
-    ]
-    for key in sorted_command[1:]:
-        matching_key = next(
-            (
-                existing_key
-                for existing_key in comp_dict.keys()
-                if key.startswith(existing_key)
-            ),
-            None,
-        )
-        if matching_key is None:
-            comp_dict[key] = None
-        else:
-            key_suffix = key[len(matching_key) :].strip()
-            if comp_dict[matching_key] is None:
-                comp_dict[matching_key] = {key_suffix}
-            else:
-                comp_dict[matching_key].add(key_suffix)
+    sorted_command = []
+    for i in CMD.values():
+        for k in i:
+            sorted_command.append(k)
+    # sorted_command_2 = [
+    #     "add_address",
+    #     "add_contact",
+    #     "add_birthday",
+    #     "add_contact",
+    #     "add_email",
+    #     "add_note",
+    #     "add_phones",
+    #     "add_tag",
+    #     "change_name",
+    #     "change_phone",
+    #     "change_address",
+    #     "change_email",
+    #     "change_note",
+    #     "del_phone",
+    #     "delete_record",
+    #     "del_address",
+    #     "del_email",
+    #     "delete_note",
+    #     "edit_name",
+    #     "edit_phone",
+    #     "edit_address",
+    #     "edit_email",
+    #     "edit_note",
+    #     "get_birthdays_on_date",
+    #     "help",
+    #     "find_name",
+    #     "search",
+    #     "hello",
+    #     "show_all",
+    #     "show_notes",
+    #     "list",
+    #     "good_bay",
+    #     "by",
+    # ]
+    # for key in sorted_command:
+    #     matching_key = next(
+    #         (
+    #             existing_key
+    #             for existing_key in comp_dict.keys()
+    #             if key.startswith(existing_key)
+    #         ),
+    #         None,
+    #     )
+    #     if matching_key is None:
+    #         comp_dict[key] = None
+    #     else:
+    #         key_suffix = key[len(matching_key) :].strip()
+    #         if comp_dict[matching_key] is None:
+    #             comp_dict[matching_key] = {key_suffix}
+    #         else:
+    #             comp_dict[matching_key].add(key_suffix)
+    # print(f"{comp_dict = }")
+    print(f"{sorted_command = }")
+    for i in sorted_command:
+        print(f"{i = }")
+        comp_dict.append()
+    # return sorted_command
     return comp_dict
 
 
-completer = NestedCompleter.from_nested_dict(func_completer(COMMANDS))
+# completer = NestedCompleter.from_nested_dict(func_completer(COMMANDS))
+# completer = func_completer(COMMANDS)
 
 
 def main():
@@ -524,8 +543,8 @@ def main():
     notes = notes.read_notes_from_file(NOTE_FILENAME)
     print(say_hello())
     while True:
-        user_input = prompt(">>>", completer=completer)
-        # user_input = input(f"{BLUE}>>{YELLOW}>>{RESET}")
+        # user_input = prompt(">>>", completer=completer)
+        user_input = input(f"{BLUE}>>{YELLOW}>>{RESET}")
         func, data = parser(user_input.strip().lower())
         print(func(*data))
         if func not in [
