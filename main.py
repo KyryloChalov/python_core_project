@@ -15,6 +15,13 @@ from constants import (
     TITLE,
     FILENAME,
     NOTE_FILENAME,
+    HELP_LIST,
+    HELP_LIST_ADD,
+    HELP_LIST_EDIT,
+    HELP_LIST_DEL,
+    HELP_LIST_CONTACT,
+    HELP_LIST_PHONE,
+    HELP_LIST_NOTE,
     RED,
     BLUE,
     YELLOW,
@@ -25,14 +32,7 @@ from constants import (
     MAGENTA,
 )
 
-from notes import (
-    NotesBook,
-    NoteError,
-    Title,
-    Content,
-    Tags,
-    Note
-) 
+from notes import NotesBook, NoteError, Title, Content, Tags, Note
 
 from get_birthday_on_date import get_birthdays_on_date
 
@@ -104,6 +104,7 @@ def add_address(*args):
 @user_error
 def add_email(*args):
     return get_record_or_error(args[0], book).add_email(args[1])
+
 
 # @user_error
 # def add_note(*_):
@@ -180,10 +181,12 @@ def del_phone(*args):
 def del_email(*args):
     return get_record_or_error(args[0], book).remove_email(Email(args[1]))
 
+
 # @user_error
 # def delete_note(*args):
 #     ...
 #     return f"Not implemented yet"
+
 
 @user_error
 def change_address(*args):
@@ -252,7 +255,6 @@ def edit_note(title, new_content):
         return f"Нотатка '{title}' не знайдена."
 
 
-
 @user_error
 def search_notes(keyword, notes):
     matching_notes = [
@@ -266,7 +268,6 @@ def search_notes(keyword, notes):
         return "No matching notes found."
 
 
-
 @user_error
 def delete_note(*args):
     title = args[0]
@@ -275,7 +276,19 @@ def delete_note(*args):
         return f"Note '{title}' deleted."
     else:
         return f"Note '{title}' not found."
+    
+    
+def add_content(*args): # воно ж change_content
+    ...
+    
+def del_content(*args): # а воно треба???
+    ...
 
+def change_tag(*args):
+    ...
+    
+def delete_tag(*args):
+    ...
 
 # --- Notes
 
@@ -321,6 +334,7 @@ def show_all(*args):
             input(f"  Press Enter for next page: ")
     return "  --- End of List ---"
 
+
 def show_notes(*args):
     pages = int(args[0]) if args else len(notes.data)
     print(f"  === Notes ===")
@@ -333,37 +347,17 @@ def show_notes(*args):
             input(f"  Press Enter for next page: ")
     return "  --- End of List ---"
 
-def add(*args):
-    help_list = []
-    help_list.append(
-        f"\t{YELLOW}add_contact {CYAN}<name> <phone>{GRAY}*n {CYAN}<birthday>  {RESET} - add a new contact with a phone number(s) and birthday(optional)"
-    )
-    help_list.append(
-        f"\t{GRAY}                                                (you can enter several phone numbers for a contact){RESET}"
-    )
-    help_list.append(
-        f"\t{YELLOW}add_phone {CYAN}<name> <new_phone>{GRAY}*n           {RESET} - add the new phone number for an existing contact"
-    )
-    help_list.append(
-        f"\t{GRAY}                                                (you can enter several phone numbers for a contact){RESET}"
-    )
-    help_list.append(
-        f'\t{YELLOW}add_bd {CYAN}<name> <birthday>                 {RESET} - add the birthday data ("dd-mm-yyyy") for an existing contact'
-    )
-    help_list.append(
-        f"\t{YELLOW}add_email {CYAN}<name> <email>                 {RESET} - add the e-mail for an existing contact"
-    )
-    help_list.append(
-        f"\t{YELLOW}add_address {CYAN}<name> <address>             {RESET} - add the address for an existing contact"
-    )
-    help_list.append(
-        f'\t{YELLOW}add_note {CYAN}<title> <note>                 {RESET} - add a new note'
-    )
-    help_list.append(
-        f'\t{YELLOW}add_tag {CYAN}<title> <tags>                 {RESET} - add tags to a note'
-    )
 
+def help_part(*args):
+    help_list = []
+    for i in args[0]:
+        # print(help_str)
+        help_list.append(HELP_LIST[i])
     return "\n".join(help_list)
+
+
+def add():
+    return help_part(HELP_LIST_ADD)
 
 
 def change(*args):
@@ -411,60 +405,63 @@ def delete(*args):
 
 def help_page(*args):
     help_list = [TITLE]
-    help_list.append(
-        f"\t{YELLOW}add_contact {CYAN}<name> <phone>{GRAY}*n {CYAN}<birthday>  {RESET} - add a new contact with a phone number(s) and birthday(optional)"
-    )
-    help_list.append(
-        f"\t{GRAY}                                                (you can enter several phone numbers for a contact){RESET}"
-    )
-    help_list.append(
-        f"\t{YELLOW}add_phone {CYAN}<name> <new_phone>{GRAY}*n           {RESET} - add the new phone number for an existing contact"
-    )
-    help_list.append(
-        f"\t{GRAY}                                                (you can enter several phone numbers for a contact){RESET}"
-    )
-    help_list.append(
-        f'\t{YELLOW}add_bd {CYAN}<name> <birthday>                 {RESET} - add the birthday data ("dd-mm-yyyy") for an existing contact'
-    )
-    help_list.append(
-        f"\t{YELLOW}change_name {CYAN}<name> <new_name>            {RESET} - change the name for an existing contact"
-    )
-    help_list.append(
-        f"\t{YELLOW}change_phone {CYAN}<name> <phone> <new_phone>  {RESET} - change the phone number for an existing contact"
-    )
-    help_list.append(
-        f"\t{YELLOW}change_bd {CYAN}<name> <new_birthday>          {RESET} - change the phone number for an existing contact"
-    )
-    help_list.append(
-        f"\t{YELLOW}delete_phone {CYAN}<name> <phone>              {RESET} - delete one phone number from an existing contact"
-    )
-    help_list.append(
-        f"\t{YELLOW}delete_contact {CYAN}<name>                    {RESET} - remove an existing contact"
-    )
-    help_list.append(
-        f"\t{YELLOW}find {CYAN}<anything>                          {RESET} - search for any string (>= 3 characters) in the contact data"
-    )
-    help_list.append(
-        f"\t{YELLOW}birthdays {CYAN}<days>                          {RESET} - shows a list of contacts after a certain number of days"
-    )
-    help_list.append(
-        f"\t{YELLOW}name {CYAN}<name>                              {RESET} - search record by the name"
-    )
-    help_list.append(
-        f"\t{YELLOW}list {GRAY}<pages>                             {RESET} - show all contacts, {GRAY}<pages>(optional) - lines per page{RESET}"
-    )
-    help_list.append(
-        f"\t{YELLOW}list_notes {GRAY}<pages>                      {RESET} - show all notes, {GRAY}<pages>(optional) - lines per page{RESET}"
-    )
-    help_list.append(
-        f'\t{YELLOW}hello                                    {RESET} - "hello-string"'
-    )
-    help_list.append(
-        f"\t{YELLOW}exit                                     {RESET} - exit from PhoneBook"
-    )
-    help_list.append(
-        f"\t{YELLOW}help                                     {RESET} - this help-page"
-    )
+    for help_str in HELP_LIST:
+        # print(help_str)
+        help_list.append(help_str)
+    # help_list.append(
+    #     f"\t{YELLOW}add_contact {CYAN}<name> <phone>{GRAY}*n {CYAN}<birthday>  {RESET} - add a new contact with a phone number(s) and birthday(optional)"
+    # )
+    # help_list.append(
+    #     f"\t{GRAY}                                                (you can enter several phone numbers for a contact){RESET}"
+    # )
+    # help_list.append(
+    #     f"\t{YELLOW}add_phone {CYAN}<name> <new_phone>{GRAY}*n           {RESET} - add the new phone number for an existing contact"
+    # )
+    # help_list.append(
+    #     f"\t{GRAY}                                                (you can enter several phone numbers for a contact){RESET}"
+    # )
+    # help_list.append(
+    #     f'\t{YELLOW}add_bd {CYAN}<name> <birthday>                 {RESET} - add the birthday data ("dd-mm-yyyy") for an existing contact'
+    # )
+    # help_list.append(
+    #     f"\t{YELLOW}change_name {CYAN}<name> <new_name>            {RESET} - change the name for an existing contact"
+    # )
+    # help_list.append(
+    #     f"\t{YELLOW}change_phone {CYAN}<name> <phone> <new_phone>  {RESET} - change the phone number for an existing contact"
+    # )
+    # help_list.append(
+    #     f"\t{YELLOW}change_bd {CYAN}<name> <new_birthday>          {RESET} - change the phone number for an existing contact"
+    # )
+    # help_list.append(
+    #     f"\t{YELLOW}delete_phone {CYAN}<name> <phone>              {RESET} - delete one phone number from an existing contact"
+    # )
+    # help_list.append(
+    #     f"\t{YELLOW}delete_contact {CYAN}<name>                    {RESET} - remove an existing contact"
+    # )
+    # help_list.append(
+    #     f"\t{YELLOW}find {CYAN}<anything>                          {RESET} - search for any string (>= 3 characters) in the contact data"
+    # )
+    # help_list.append(
+    #     f"\t{YELLOW}birthdays {CYAN}<days>                          {RESET} - shows a list of contacts after a certain number of days"
+    # )
+    # help_list.append(
+    #     f"\t{YELLOW}name {CYAN}<name>                              {RESET} - search record by the name"
+    # )
+    # help_list.append(
+    #     f"\t{YELLOW}list {GRAY}<pages>                             {RESET} - show all contacts, {GRAY}<pages>(optional) - lines per page{RESET}"
+    # )
+    # help_list.append(
+    #     f"\t{YELLOW}list_notes {GRAY}<pages>                      {RESET} - show all notes, {GRAY}<pages>(optional) - lines per page{RESET}"
+    # )
+    # help_list.append(
+    #     f'\t{YELLOW}hello                                    {RESET} - "hello-string"'
+    # )
+    # help_list.append(
+    #     f"\t{YELLOW}exit                                     {RESET} - exit from PhoneBook"
+    # )
+    # help_list.append(
+    #     f"\t{YELLOW}help                                     {RESET} - this help-page"
+    # )
     return "\n".join(help_list)
 
 
