@@ -33,8 +33,7 @@ class Tags(Field):
         super().__init__(tags or [])
 
     def add_tags(self, new_tags):
-        self.value.extend(new_tags)
-
+        self.value += new_tags  
     def __iter__(self):
         return iter(self.value)
 
@@ -77,10 +76,10 @@ class NotesBook(UserDict):
 
     def add_tags(self, title, tags):  # метод для додавання тегів
         if title in self.data:
-            self.data[title].tags.extend(tags)
-            return f"Tags {', '.join(tags)} added to the note with title '{title}'."
+            self.data[title].tags.add_tags(tags)
+            return f"Теги {', '.join(tags)} додано до нотатки із заголовком '{title}'."
         else:
-            raise NoteError(f"Note with title '{title}' not found.")
+            raise NoteError(f"Нотатку із заголовком '{title}' не знайдено.")
 
     def search_notes_by_tag(self, tag, sort_by_keywords=False):
         matching_notes = [
@@ -230,7 +229,7 @@ if __name__ == "__main__":
     print(add_note("Заголовок", "Зміст нотатки", "#тег1,#тег2"))
     print(edit_note("Заголовок", "ще та маячня"))
     print(search_notes("маячня", notes))
-    # print(add_note("kkk"))
+    print(add_tag("Заголовок", "#тег5"))
     # print(add_note("kkk"))
     # print(add_note("kkk"))
     # print(add_note("kkk"))
