@@ -321,6 +321,17 @@ def show_all(*args):
             input(f"  Press Enter for next page: ")
     return "  --- End of List ---"
 
+def show_notes(*args):
+    pages = int(args[0]) if args else len(notes.data)
+    print(f"  === Notes ===")
+    count = 0
+    for _ in notes.iterator(pages):
+        for item in _:
+            print(item)
+            count += 1
+        if count < len(book):
+            input(f"  Press Enter for next page: ")
+    return "  --- End of List ---"
 
 def add(*args):
     help_list = []
@@ -346,7 +357,10 @@ def add(*args):
         f"\t{YELLOW}add_address {CYAN}<name> <address>             {RESET} - add the address for an existing contact"
     )
     help_list.append(
-        f'\t{YELLOW}add_note {CYAN}<name> <note>                 {RESET} - add the birthday data ("dd-mm-yyyy") for an existing contact'
+        f'\t{YELLOW}add_note {CYAN}<title> <note>                 {RESET} - add a new note'
+    )
+    help_list.append(
+        f'\t{YELLOW}add_tag {CYAN}<title> <tags>                 {RESET} - add tags to a note'
     )
 
     return "\n".join(help_list)
@@ -370,7 +384,7 @@ def change(*args):
         f"\t{YELLOW}change_address {CYAN}<name> <new_address>      {RESET} - change the address for an existing contact"
     )
     help_list.append(
-        f"\t{YELLOW}change_note {CYAN}<name> <note>          {RESET} - change the phone number for an existing contact"
+        f"\t{YELLOW}change_note {CYAN}<name> <note>          {RESET} - change the note content for an existing contact"
     )
     return "\n".join(help_list)
 
@@ -440,6 +454,9 @@ def help_page(*args):
         f"\t{YELLOW}list {GRAY}<pages>                             {RESET} - show all contacts, {GRAY}<pages>(optional) - lines per page{RESET}"
     )
     help_list.append(
+        f"\t{YELLOW}list_notes {GRAY}<pages>                      {RESET} - show all notes, {GRAY}<pages>(optional) - lines per page{RESET}"
+    )
+    help_list.append(
         f'\t{YELLOW}hello                                    {RESET} - "hello-string"'
     )
     help_list.append(
@@ -477,12 +494,13 @@ COMMANDS = {
     add_address: ("add_address", "add_adr", "change_address", "change_adr"),
     add_email: ("add_email", "email_add"),
     add_note: ("add_note", "note_add"),
+    add_tag: ("add_tag", "tag_add"),
     change: ("change", "edit"),
     change_name: ("change_name", "name_change"),
     change_phone: ("change_phone", "phone_change", "edit_phone"),
     change_address: ("change_address", "change_adr", "edit_address", "edit_adr"),
     change_email: ("change_email", "email_change"),
-    # change_note:
+    edit_note: ("change_note", "note_change", "edit_note"),
     delete: ("delete", "del"),
     del_phone: ("del_phone", "delete_phone"),
     delete_record: ("delete_contact", "del_contact", "delete_record", "del_record"),
@@ -495,6 +513,7 @@ COMMANDS = {
     help_page: ("help",),
     say_hello: ("hello", "hi"),
     show_all: ("show_all", "show", "list"),
+    show_notes: ("show_notes", "show_note", "list_notes),"),
     say_good_bay: ("exit", "good_bay", "by", "close", "end"),
 }
 
@@ -530,10 +549,12 @@ def func_completer(CMD: dict):
         "add_email",
         "add_note",
         "add_phones",
+        "add_tag",
         "change_name",
         "change_phone",
         "change_address",
         "change_email",
+        "change_note",
         "del_phone",
         "delete_record",
         "del_address",
@@ -543,12 +564,14 @@ def func_completer(CMD: dict):
         "edit_phone",
         "edit_address",
         "edit_email",
+        "edit_note",
         "get_birthdays_on_date",
         "help",
         "find_name",
         "search",
         "hello",
         "show_all",
+        "show_notes",
         "list",
         "good_bay",
         "by",
@@ -580,7 +603,7 @@ def main():
     global book
     global notes
     book = book.read_contacts_from_file(FILENAME)
-    #notes = notes.read_notes_from_file(NOTE_FILENAME)
+    notes = notes.read_notes_from_file(NOTE_FILENAME)
     print("\n" + BLUE + TITLE + RESET + "\t\tType 'help' for information")
     while True:
         user_input = prompt(">>>", completer=completer)
@@ -590,6 +613,7 @@ def main():
         if func not in [
             say_good_bay,
             show_all,
+            show_notes,
             say_hello,
             help_page,
             search,
@@ -597,7 +621,7 @@ def main():
             get_birthdays_on_date,
         ]:
             book.write_contacts_to_file(FILENAME)
-            #notes.write_notes_to_file(NOTE_FILENAME)
+            notes.write_notes_to_file(NOTE_FILENAME)
 
 
 if __name__ == "__main__":
