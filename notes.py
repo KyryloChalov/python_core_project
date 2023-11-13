@@ -15,8 +15,17 @@ class Title(Field):
 
 
 class Content(Field):
+    
+    def __init__(self, content):
+        super().__init__(content)
+        
+    
     def edit_content(self, new_content):
         self.value = new_content
+        
+        
+    def lower(self):
+        return self.value.lower()
 
 
 class Tags(Field):
@@ -25,6 +34,9 @@ class Tags(Field):
 
     def add_tags(self, new_tags):
         self.value.extend(new_tags)
+
+    def __iter__(self):
+        return iter(self.value)
 
 
 class Note:
@@ -54,7 +66,7 @@ class Note:
 
 class NotesBook(UserDict):
     def __init__(self):
-        self.notes = {}
+        super().__init__()
 
     # def search_notes_by_tag(self, tag, sort_by_keywords=False):
     #     matching_notes = [
@@ -64,8 +76,8 @@ class NotesBook(UserDict):
         #]
 
     def add_tags(self, title, tags):  # метод для додавання тегів
-        if title in self.notes:
-            self.notes[title].tags.extend(tags)
+        if title in self.data:
+            self.data[title].tags.extend(tags)
             return f"Tags {', '.join(tags)} added to the note with title '{title}'."
         else:
             raise NoteError(f"Note with title '{title}' not found.")
@@ -73,7 +85,7 @@ class NotesBook(UserDict):
     def search_notes_by_tag(self, tag, sort_by_keywords=False):
         matching_notes = [
             note
-            for note in self.notes.values()
+            for note in self.data.values()
             if tag.lower() in map(str.lower, note.tags)
         ]
         if sort_by_keywords:
@@ -85,7 +97,7 @@ class NotesBook(UserDict):
 
     def search_notes(self, keyword):
         result = []
-        for title, content in self.notes.items():
+        for title, content in self.data.items():
             if keyword.lower() in title.lower() or keyword.lower() in content.lower():
                 result.append(f"Title: {title}\nContent: {content}\n")
         return result if result else "No matching notes found."
@@ -125,16 +137,16 @@ def add_note(*args):
 
     # content = " ".join(args[content_start_index:args.index(f"--tags={+tags[0]}") if tags else len(args)])
     new_note = Note(title, content, tags)
-    notes.notes[title] = new_note
+    notes.data[title] = new_note
     return f"Note 'Title: {title} Content:{content} Tags:{', '.join(tags)}' added."
 
 
 # @user_error
 def edit_note(title, new_content):
     # Перевірка наявності тайтлу в notes
-    if title in notes.notes:
+    if title in notes.data:
         # Змінюємо тільки content
-        notes.notes[title].content.edit_content(new_content)
+        notes.data[title].content.edit_content(new_content)
         return f"Note '{title}' changed. New content: '{new_content}'"
     else:
         return f"Нотатка '{title}' не знайдена."
@@ -142,20 +154,17 @@ def edit_note(title, new_content):
 
 
 # @user_error
-def search_notes(*keywords, notes):
+def search_notes(keyword, notes):
     matching_notes = [
-        f"Title: {title}\nContent: {note['content']}\nTags: {', '.join(note['tags'])}"
+        f"Note 'Title: {title}' Content: {note.content} Tags:{', '.join(note.tags)}"
         for title, note in notes.items()
-        if all(
-            keyword.lower() in title.lower()
-            or keyword.lower() in note["content"].lower()
-            for keyword in keywords
-        )
+        if keyword.lower() in title.lower() or keyword.lower() in note.content.lower()
     ]
     if matching_notes:
         return "\n".join(matching_notes)
     else:
         return "No matching notes found."
+
 
 
 # @user_error
@@ -219,8 +228,8 @@ def delete_note(*args):
 #         return result if result else "No matching notes found."
 if __name__ == "__main__":
     print(add_note("Заголовок", "Зміст нотатки", "#тег1,#тег2"))
-    print(edit_note("Заголовок", "маячня"))
-    # print(add_note("kkk "))
+    print(edit_note("Заголовок", "ще та маячня"))
+    print(search_notes("маячня", notes))
     # print(add_note("kkk"))
     # print(add_note("kkk"))
     # print(add_note("kkk"))
