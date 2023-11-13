@@ -1,5 +1,6 @@
 TITLE = "\tPhoneBook\tversion 5.9.2"
 FILENAME = 'addressbook.bin'
+NOTE_FILENAME = 'notes.bin'
 
 BLACK = "\033[30m"
 RED =   "\033[31m"
