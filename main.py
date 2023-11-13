@@ -403,13 +403,78 @@ def parser(text: str):
     return unknown, []
 
 
+from prompt_toolkit.completion import NestedCompleter
+
+# from terminal_tips import completer
+from prompt_toolkit import prompt
+
+# COMMANDS = dict(sorted(COMMANDS.keys(), reverse=True))
+
+
+def func_completer(CMD: dict):
+    comp_dict = {}
+    print(f"{CMD.values() = }")
+    # sorted_command = sorted(CMD.keys())
+    sorted_command = [
+        "add_address",
+        "add_contact",
+        "add_birthday",
+        "add_contact",
+        "add_email",
+        "add_phones",
+        "change_name",
+        "change_phone",
+        "change_address",
+        "change_email",
+        "del_phone",
+        "delete_record",
+        "del_address",
+        "del_email",
+        "edit_name",
+        "edit_phone",
+        "edit_address",
+        "edit_email",
+        "get_birthdays_on_date",
+        "help",
+        "find_name",
+        "search",
+        "hello",
+        "show_all",
+        "list",
+        "good_bay",
+        "by",
+    ]
+    for key in sorted_command[1:]:
+        matching_key = next(
+            (
+                existing_key
+                for existing_key in comp_dict.keys()
+                if key.startswith(existing_key)
+            ),
+            None,
+        )
+        if matching_key is None:
+            comp_dict[key] = None
+        else:
+            key_suffix = key[len(matching_key) :].strip()
+            if comp_dict[matching_key] is None:
+                comp_dict[matching_key] = {key_suffix}
+            else:
+                comp_dict[matching_key].add(key_suffix)
+    return comp_dict
+
+
+completer = NestedCompleter.from_nested_dict(func_completer(COMMANDS))
+
+
 def main():
     global book
     book = book.read_contacts_from_file(FILENAME)
     print("\n" + BLUE + TITLE + RESET + "\t\tType 'help' for information")
     while True:
-        user_input = input(f"{YELLOW}>{BLUE}>{YELLOW}>{RESET}").strip().lower()
-        func, data = parser(user_input)
+        user_input = prompt(">>>", completer=completer)
+        # user_input = input(f"{BLUE}>>{YELLOW}>>{RESET}")
+        func, data = parser(user_input.strip().lower())
         print(func(*data))
         if func not in [
             say_good_bay,

@@ -264,16 +264,18 @@ class Record:
         blanks = " " * (LEN_OF_NAME_FIELD - len(str(self.name)))
         name_str = f"{self.name} {blanks}: "
         phone_str = f"{', '.join(str(p) for p in self.phones)}"
+        if phone_str != "":
+            phone_str += "  "
         
         if self.birthday:
             days_to_bd = int(self.days_to_birthday(self.birthday)[0])
             data_bd_str = self.datetime_to_str(self.birthday)
             years_bd = self.days_to_birthday(self.birthday)[1]
             if days_to_bd == 0:
-                bd_str = f" {MAGENTA} birthday: {RESET}{data_bd_str} {MAGENTA}(today is {years_bd}th birthday){RESET}"
+                bd_str = f"{MAGENTA}birthday: {RESET}{data_bd_str} {MAGENTA}(today is {years_bd}th birthday){RESET}"
             else:
                 color_bd = CYAN if (self.days_to_birthday(self.birthday)[0] <= 7) else GRAY
-                bd_str = f" {color_bd} birthday: {RESET}{data_bd_str} {color_bd}({days_to_bd} days until the {years_bd}th birthday){RESET}"
+                bd_str = f"{color_bd}birthday: {RESET}{data_bd_str} {color_bd}({days_to_bd} days until the {years_bd}th birthday){RESET}"
         else:
             bd_str = ""
 
@@ -284,7 +286,7 @@ class Record:
         )
         address_str = str(self.address) if self.address else ""
 
-        new_line = "\n" + (" " * (LEN_OF_NAME_FIELD + 3)) if all([phone_str + bd_str != "", emails_str + address_str != ""]) else ""
+        new_line = "\n" + (" " * (LEN_OF_NAME_FIELD + 3)) if all([phone_str.strip() + bd_str != "", emails_str + address_str != ""]) else ""
 
         return name_str + phone_str + bd_str + new_line + emails_str + address_str
 
