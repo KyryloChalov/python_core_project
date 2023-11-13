@@ -280,7 +280,7 @@ class Record:
             bd_str = ""
 
         emails_str = (
-            f"{GRAY}e-mail{"s" if len(self.emails) > 1 else ""}: {RESET}" + ", ".join(str(e) for e in self.emails) + "  "
+            f"{GRAY}e-mail{'s' if len(self.emails) > 1 else ''}: {RESET}" + ", ".join(str(e) for e in self.emails) + "  "
             if self.emails
             else ""
         )
