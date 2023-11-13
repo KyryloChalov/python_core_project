@@ -264,7 +264,7 @@ class Record:
         blanks = " " * (LEN_OF_NAME_FIELD - len(str(self.name)))
         name_str = f"{self.name} {blanks}: "
         phone_str = f"{', '.join(str(p) for p in self.phones)}"
-        if phone_str != "":
+        if phone_str != "": # так, це милиця - не чіпати!
             phone_str += "  "
         
         if self.birthday:

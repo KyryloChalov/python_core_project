@@ -390,7 +390,7 @@ def change(*args):
 
 
 def delete(*args):
-    help_list = [TITLE]
+    help_list = []
     help_list.append(
         f"\t{YELLOW}delete_phone {CYAN}<name> <phone>              {RESET} - delete one phone number from an existing contact"
     )
@@ -487,9 +487,9 @@ def unknown(*args):
 
 
 COMMANDS = {
-    add: ("add", "+"),
+    add: ("add",),
     add_contact: ("add_record", "add_contact"),
-    add_phones: ("add_phone", "phone_add"),
+    add_phones: ("add_phone", "add_phones"),
     add_birthday: ("add_birthday", "add_bd", "change_birthday", "change_bd"),
     add_address: ("add_address", "add_adr", "change_address", "change_adr"),
     add_email: ("add_email", "email_add"),
