@@ -250,11 +250,11 @@ class NotesBook(UserDict):
 #             if keyword.lower() in title.lower() or keyword.lower() in content.lower():
 #                 result.append(f"Title: {title}\nContent: {content}\n")
 #         return result if result else "No matching notes found."
-if __name__ == "__main__":
-    print(add_note("Заголовок", "Зміст нотатки", "#тег1,#тег2"))
-    print(edit_note("Заголовок", "ще та маячня"))
-    print(search_notes("маячня", notes))
-    # print(add_note("kkk"))
+# if __name__ == "__main__":
+#     print(add_note("Заголовок", "Зміст нотатки", "#тег1,#тег2"))
+#     print(edit_note("Заголовок", "ще та маячня"))
+#     print(search_notes("маячня", notes))
+#     # print(add_note("kkk"))
     # print(add_note("kkk"))
     # print(add_note("kkk"))
     # print(add_note("kkk"))
