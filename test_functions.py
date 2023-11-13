@@ -176,3 +176,5 @@ if __name__ == "__main__":
     print(GREEN + "\n     контакти, в яких день народження " + RESET)
     result = get_birthdays_on_date(book)
     print(result)
+
+    print(help_page())
