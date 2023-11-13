@@ -145,7 +145,7 @@ if __name__ == "__main__":
     print(add_contact("Person_3", "+38(098)221-15-44", "14-11-1988"))
     print(add_contact("Person_8", "0958645548", "08-11-1967"))
     print(add_contact("Person_4", "+380664589955", "07-11-1968"))
-    print(add_contact("Person_5", "674567890", "0660554488"))
+    print(add_contact("Person_5", "674567890", "0660554488", "13-11-2005"))
 
     print(GREEN + "     а тепер додаємо контакту, що НЕ існує номер телефону" + RESET)
     print(add_phones("Jill_e", "0677977155"))
