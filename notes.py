@@ -6,7 +6,7 @@ import pickle
 from classes import Field
 
 
-class NoteError:
+class NoteError(Exception):
     ...
 
 
@@ -103,78 +103,78 @@ class NotesBook(UserDict):
         return result if result else "No matching notes found."
 
 
-notes = NotesBook()
+# notes = NotesBook()
 
 
-# @user_error
-def add_tag(*args):
-    title = args[0]
-    tags = args[1:]
-    return notes.add_tags(title, tags)
+# # @user_error
+# def add_tag(*args):
+#     title = args[0]
+#     tags = args[1:]
+#     return notes.add_tags(title, tags)
 
 
-# @user_error
-def search_notes_by_tag(*args):
-    tag = args[0]
-    sort_by_keywords = args[1:].lower() == "true" if len(args) > 1 else False
-    return notes.search_notes_by_tag(tag, sort_by_keywords)
+# # @user_error
+# def search_notes_by_tag(*args):
+#     tag = args[0]
+#     sort_by_keywords = args[1:].lower() == "true" if len(args) > 1 else False
+#     return notes.search_notes_by_tag(tag, sort_by_keywords)
 
 
-# @user_error
-def add_note(*args):
-    title = args[0]
-    content_start_index = 1
-    tags = []
-    #  теги в аргументах
-    content = " ".join(args[content_start_index:])
-    for i, arg in enumerate(args[content_start_index:], start=content_start_index):
-        if arg.startswith("#"):
-            tag = (
-                arg.lstrip("#, ").rstrip(", ").replace("#", "")
-            )  # видаляємо # і зайві пробіли
-            tags.append(tag)
-            content = " ".join(args[content_start_index:i])
+# # @user_error
+# def add_note(*args):
+#     title = args[0]
+#     content_start_index = 1
+#     tags = []
+#     #  теги в аргументах
+#     content = " ".join(args[content_start_index:])
+#     for i, arg in enumerate(args[content_start_index:], start=content_start_index):
+#         if arg.startswith("#"):
+#             tag = (
+#                 arg.lstrip("#, ").rstrip(", ").replace("#", "")
+#             )  # видаляємо # і зайві пробіли
+#             tags.append(tag)
+#             content = " ".join(args[content_start_index:i])
 
-    # content = " ".join(args[content_start_index:args.index(f"--tags={+tags[0]}") if tags else len(args)])
-    new_note = Note(title, content, tags)
-    notes.data[title] = new_note
-    return f"Note 'Title: {title} Content:{content} Tags:{', '.join(tags)}' added."
-
-
-# @user_error
-def edit_note(title, new_content):
-    # Перевірка наявності тайтлу в notes
-    if title in notes.data:
-        # Змінюємо тільки content
-        notes.data[title].content.edit_content(new_content)
-        return f"Note '{title}' changed. New content: '{new_content}'"
-    else:
-        return f"Нотатка '{title}' не знайдена."
+#     # content = " ".join(args[content_start_index:args.index(f"--tags={+tags[0]}") if tags else len(args)])
+#     new_note = Note(title, content, tags)
+#     notes.data[title] = new_note
+#     return f"Note 'Title: {title} Content:{content} Tags:{', '.join(tags)}' added."
 
 
-
-# @user_error
-def search_notes(keyword, notes):
-    matching_notes = [
-        f"Note 'Title: {title}' Content: {note.content} Tags:{', '.join(note.tags)}"
-        for title, note in notes.items()
-        if keyword.lower() in title.lower() or keyword.lower() in note.content.lower()
-    ]
-    if matching_notes:
-        return "\n".join(matching_notes)
-    else:
-        return "No matching notes found."
+# # @user_error
+# def edit_note(title, new_content):
+#     # Перевірка наявності тайтлу в notes
+#     if title in notes.data:
+#         # Змінюємо тільки content
+#         notes.data[title].content.edit_content(new_content)
+#         return f"Note '{title}' changed. New content: '{new_content}'"
+#     else:
+#         return f"Нотатка '{title}' не знайдена."
 
 
 
-# @user_error
-def delete_note(*args):
-    title = args[0]
-    if title in notes.notes:
-        del notes.notes[title]
-        return f"Note '{title}' deleted."
-    else:
-        return f"Note '{title}' not found."
+# # @user_error
+# def search_notes(keyword, notes):
+#     matching_notes = [
+#         f"Note 'Title: {title}' Content: {note.content} Tags:{', '.join(note.tags)}"
+#         for title, note in notes.items()
+#         if keyword.lower() in title.lower() or keyword.lower() in note.content.lower()
+#     ]
+#     if matching_notes:
+#         return "\n".join(matching_notes)
+#     else:
+#         return "No matching notes found."
+
+
+
+# # @user_error
+# def delete_note(*args):
+#     title = args[0]
+#     if title in notes.notes:
+#         del notes.notes[title]
+#         return f"Note '{title}' deleted."
+#     else:
+#         return f"Note '{title}' not found."
 
 
 # from collections import UserDict

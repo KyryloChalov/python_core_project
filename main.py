@@ -14,6 +14,7 @@ from classes import (
 from constants import (
     TITLE,
     FILENAME,
+    NOTE_FILENAME,
     RED,
     BLUE,
     YELLOW,
@@ -24,6 +25,15 @@ from constants import (
     MAGENTA,
 )
 
+from notes import (
+    NotesBook,
+    NoteError,
+    Title,
+    Content,
+    Tags,
+    Note
+) 
+
 from get_birthday_on_date import get_birthdays_on_date
 
 # from notes import NotesBook
@@ -31,6 +41,7 @@ from get_birthday_on_date import get_birthdays_on_date
 from sort_path import sorting
 
 book = AddressBook()
+notes = NotesBook()
 
 
 def user_error(func):
@@ -53,6 +64,8 @@ def user_error(func):
             return f"{RED}phone number {args[1]} is not among the contact numbers of {args[0]} {RESET}"
         except TypeError as ve:
             return f"{RED} {ve}{RESET}"
+        except NoteError as ne:
+            return f"{RED} {ne}{RESET}"
 
     return inner
 
@@ -91,6 +104,21 @@ def add_address(*args):
 @user_error
 def add_email(*args):
     return get_record_or_error(args[0], book).add_email(args[1])
+
+# @user_error
+# def add_note(*_):
+#     title = input("Enter Note Title >>> ")
+#     if not title:
+#         raise NoteError("Note title cannot be empty")
+#     title = Title(title)
+#     content = input("Note Text >>> ")
+#     if not content:
+#         raise NoteError("Note text cannot be empty")
+#     tags = input("Add Note Tags, separated by comma >>> ")
+#     tags = [(tag.strip()) for tag in tags.split(",")] if tags else None
+#     note = Note(title, content, tags)
+#     notes.add_note(note)
+#     return f"Note created successfully"
 
 
 @user_error
@@ -152,6 +180,10 @@ def del_phone(*args):
 def del_email(*args):
     return get_record_or_error(args[0], book).remove_email(Email(args[1]))
 
+# @user_error
+# def delete_note(*args):
+#     ...
+#     return f"Not implemented yet"
 
 @user_error
 def change_address(*args):
@@ -171,6 +203,81 @@ def delete_record(*args):
 @user_error
 def name_find(*args):
     return book.find_name(args[0])
+
+
+# --- Notes
+@user_error
+def add_tag(*args):
+    title = args[0]
+    tags = args[1:]
+    return notes.add_tags(title, tags)
+
+
+@user_error
+def search_notes_by_tag(*args):
+    tag = args[0]
+    sort_by_keywords = args[1:].lower() == "true" if len(args) > 1 else False
+    return notes.search_notes_by_tag(tag, sort_by_keywords)
+
+
+@user_error
+def add_note(*args):
+    title = args[0]
+    content_start_index = 1
+    tags = []
+    #  теги в аргументах
+    content = " ".join(args[content_start_index:])
+    for i, arg in enumerate(args[content_start_index:], start=content_start_index):
+        if arg.startswith("#"):
+            tag = (
+                arg.lstrip("#, ").rstrip(", ").replace("#", "")
+            )  # видаляємо # і зайві пробіли
+            tags.append(tag)
+            content = " ".join(args[content_start_index:i])
+
+    # content = " ".join(args[content_start_index:args.index(f"--tags={+tags[0]}") if tags else len(args)])
+    new_note = Note(title, content, tags)
+    notes.data[title] = new_note
+    return f"Note 'Title: {title} Content:{content} Tags:{', '.join(tags)}' added."
+
+
+@user_error
+def edit_note(title, new_content):
+    # Перевірка наявності тайтлу в notes
+    if title in notes.data:
+        # Змінюємо тільки content
+        notes.data[title].content.edit_content(new_content)
+        return f"Note '{title}' changed. New content: '{new_content}'"
+    else:
+        return f"Нотатка '{title}' не знайдена."
+
+
+
+@user_error
+def search_notes(keyword, notes):
+    matching_notes = [
+        f"Note 'Title: {title}' Content: {note.content} Tags:{', '.join(note.tags)}"
+        for title, note in notes.items()
+        if keyword.lower() in title.lower() or keyword.lower() in note.content.lower()
+    ]
+    if matching_notes:
+        return "\n".join(matching_notes)
+    else:
+        return "No matching notes found."
+
+
+
+@user_error
+def delete_note(*args):
+    title = args[0]
+    if title in notes.notes:
+        del notes.notes[title]
+        return f"Note '{title}' deleted."
+    else:
+        return f"Note '{title}' not found."
+
+
+# --- Notes
 
 
 def search(*args):
@@ -369,7 +476,7 @@ COMMANDS = {
     add_birthday: ("add_birthday", "add_bd", "change_birthday", "change_bd"),
     add_address: ("add_address", "add_adr", "change_address", "change_adr"),
     add_email: ("add_email", "email_add"),
-    # add_note: ("add_note"),
+    add_note: ("add_note", "note_add"),
     change: ("change", "edit"),
     change_name: ("change_name", "name_change"),
     change_phone: ("change_phone", "phone_change", "edit_phone"),
@@ -381,7 +488,7 @@ COMMANDS = {
     delete_record: ("delete_contact", "del_contact", "delete_record", "del_record"),
     del_address: ("delete_address", "delete_adr", "del_adr"),
     del_email: ("delete_email", "del_email"),
-    # delete_note:
+    delete_note: ("delete_note", "del_note"),
     name_find: ("name", "find_name"),
     get_birthdays_on_date: ("birthdays", "find_birthdays", "bd"),
     search: ("search", "seek", "find"),
@@ -421,6 +528,7 @@ def func_completer(CMD: dict):
         "add_birthday",
         "add_contact",
         "add_email",
+        "add_note",
         "add_phones",
         "change_name",
         "change_phone",
@@ -430,6 +538,7 @@ def func_completer(CMD: dict):
         "delete_record",
         "del_address",
         "del_email",
+        "delete_note",
         "edit_name",
         "edit_phone",
         "edit_address",
@@ -469,7 +578,9 @@ completer = NestedCompleter.from_nested_dict(func_completer(COMMANDS))
 
 def main():
     global book
+    global notes
     book = book.read_contacts_from_file(FILENAME)
+    #notes = notes.read_notes_from_file(NOTE_FILENAME)
     print("\n" + BLUE + TITLE + RESET + "\t\tType 'help' for information")
     while True:
         user_input = prompt(">>>", completer=completer)
@@ -486,6 +597,7 @@ def main():
             get_birthdays_on_date,
         ]:
             book.write_contacts_to_file(FILENAME)
+            #notes.write_notes_to_file(NOTE_FILENAME)
 
 
 if __name__ == "__main__":
