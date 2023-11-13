@@ -259,6 +259,7 @@ class Record:
                 return True
             else:
                 return False
+            
 
     def __str__(self) -> str:
         blanks = " " * (LEN_OF_NAME_FIELD - len(str(self.name)))

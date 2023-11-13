@@ -2,6 +2,7 @@ from notes import Note, NotesBook, add_note
 from constants import GREEN, RESET
 
 
+
 if __name__ == "__main__":
     note_book = NotesBook()
 

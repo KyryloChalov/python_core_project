@@ -3,7 +3,6 @@ import shutil
 from pathlib import Path
 from constants import RED, BLUE, YELLOW, CYAN, GRAY, WHITE, RESET
 
-
 CATEGORIES = {
     "Archives": [".zip", ".gz", ".tar"],
     "Audio": [".mp3", ".wav", ".flac", ".wma", ".ogg"],

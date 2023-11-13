@@ -7,6 +7,7 @@ from constants import GREEN, RESET
 #             test 1 (Classes)
 # =============================================
 
+
 if __name__ == "__main__":
     book = AddressBook()
     filename = "book_test_1.bin"

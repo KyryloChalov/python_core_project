@@ -16,6 +16,7 @@ from classes import (
     NoContactError,
 )
 
+
 # def get_period(start_date: date, days: int) -> dict:
 #     result = {}
 #     for _ in range(days + 1):

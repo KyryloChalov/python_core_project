@@ -362,6 +362,7 @@ def unknown(*args):
 # =============================================
 
 
+
 COMMANDS = {
     add: ("add", "+"),
     add_contact: ("add_record", "add_contact"),
@@ -473,7 +474,7 @@ def main():
     print("\n" + BLUE + TITLE + RESET + "\t\tType 'help' for information")
     while True:
         user_input = prompt(">>>", completer=completer)
-        # user_input = input(f"{BLUE}>>{YELLOW}>>{RESET}")
+        # user_input = input(f"{BLUE}>>{YELLOW}>>{RESET}") 
         func, data = parser(user_input.strip().lower())
         print(func(*data))
         if func not in [
