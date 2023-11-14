@@ -63,7 +63,7 @@ def user_error(func):
             return f"{RED}the phone number must contains only digits, format: '0671234567' or '+380671234567'{RESET}"
         except EmailError as ee:
             return f"{RED} {ee}{RESET}"
-        #except AttributeError:
+        # except AttributeError:
         #    return f"{RED}phone number {args[1]} is not among the contact numbers of {args[0]} {RESET}"
         except AttributeError as ae:
             return f"{RED} {ae}{RESET}"
@@ -117,7 +117,6 @@ def add_email(*args):
         return f"{RED}contact {WHITE}{args[0]}{RED} not found in address book{RESET}"
 
 
-
 @user_error
 def add_contact(*args):
     if get_record_or_error(args[0], book):
@@ -161,7 +160,9 @@ def change_name(*args):
 @user_error
 def change_phone(*args):
     if get_record_or_error(args[0], book):
-        return get_record_or_error(args[0], book).edit_phone(Phone(args[1]), Phone(args[2]))
+        return get_record_or_error(args[0], book).edit_phone(
+            Phone(args[1]), Phone(args[2])
+        )
     else:
         return f"{RED}contact {WHITE}{args[0]}{RED} not found in address book{RESET}"
 
@@ -169,7 +170,9 @@ def change_phone(*args):
 @user_error
 def change_email(*args):
     if get_record_or_error(args[0], book):
-        return get_record_or_error(args[0], book).edit_email(Email(args[1]), Email(args[2]))
+        return get_record_or_error(args[0], book).edit_email(
+            Email(args[1]), Email(args[2])
+        )
     else:
         return f"{RED}contact {WHITE}{args[0]}{RED} not found in address book{RESET}"
 
@@ -188,7 +191,7 @@ def del_email(*args):
         return get_record_or_error(args[0], book).remove_email(Email(args[1]))
     else:
         return f"{RED}contact {WHITE}{args[0]}{RED} not found in address book{RESET}"
-    
+
 
 @user_error
 def change_address(*args):
@@ -225,7 +228,7 @@ def add_tag(*args):
 
 
 def search_notes_by_tag(notes, tag):
-        return notes.search_notes_by_tag(tag)
+    return notes.search_notes_by_tag(tag)
 
 
 # @user_error
@@ -240,7 +243,7 @@ def add_note(*args):
     title = args[0]
     content_start_index = 1
     tags = []
-    
+
     # теги в аргументах
     content_words = []
     for arg in args[content_start_index:]:
@@ -252,9 +255,9 @@ def add_note(*args):
     content = " ".join(content_words)
 
     notes.add_note(title, content, tags)
-    #notes.data[title] = new_note
+    # notes.data[title] = new_note
     return f"Note 'Title: {title} Content:{content} Tags:{', '.join(tags)}' added."
-    
+
 
 @user_error
 def edit_note(title, new_content):
@@ -297,6 +300,7 @@ def add_content(*args):  # воно ж change_content
 
 def del_content(*args):  # а воно треба??? - а нащо лишати заголовок, тег без опису?
     ...
+
 
 @user_error
 def change_tag(*args):
@@ -478,10 +482,9 @@ COMMANDS = {
     add_email: ("add_email", "email_add"),
     add_note: ("add_note", "note_add"),
     add_tag: ("add_tag", "tag_add"),
-    delete_tag: ("delete_tag", "tag_delete"),
     change_tag: ("change_tag", "tag_change"),
     change: ("change", "edit"),
-    change_name: ("change_name", "name_change"),
+    change_name: ("change_name", "name_change", "edit_name"),
     change_phone: ("change_phone", "phone_change", "edit_phone"),
     change_address: ("change_address", "change_adr", "edit_address", "edit_adr"),
     change_email: ("change_email", "email_change"),
@@ -490,11 +493,11 @@ COMMANDS = {
     del_phone: ("del_phone", "delete_phone"),
     delete_record: ("delete_contact", "del_contact", "delete_record", "del_record"),
     del_address: ("delete_address", "delete_adr", "del_adr"),
+    delete_tag: ("delete_tag", "tag_delete"),
     del_email: ("delete_email", "del_email"),
     delete_note: ("delete_note", "del_note"),
     name_find: ("name", "find_name"),
     birthday: ("birthdays", "birthday", "find_birthdays", "bd"),
-    # get_birthdays_on_date: ("birthdays", "find_birthdays", "bd"),
     search: ("search", "seek", "find_any"),
     help_page: ("help",),
     say_hello: ("hello", "hi"),
@@ -540,6 +543,7 @@ def func_completer(CMD):
         "add_tag",
         "change_name",
         "change_phone",
+        "edit_name",
         "edit_phone",
         "change_address",
         "edit_address",
@@ -552,6 +556,7 @@ def func_completer(CMD):
         "delete_address",
         "delete_email",
         "delete_note",
+        "delete_tag",
         "find_name",
         "birthdays",
         "search",
@@ -563,7 +568,7 @@ def func_completer(CMD):
         "list_notes",
         "exit",
         "close",
-        "sort_path"
+        "sort_path",
     ]
     for i in sorted_command:
         # print(f"'{i}',")
