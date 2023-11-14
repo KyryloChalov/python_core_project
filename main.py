@@ -311,7 +311,16 @@ def change_tag(*args):
 
 
 def delete_tag(*args):
-    ...
+    search_title = args[0]
+    search_tag = args[1]
+    for title, note in notes.items():
+        if search_title == title:
+            if search_tag in note.tags:
+                note.tags.remove(search_tag)
+                return f"Tag {search_tag} has been successfully changed from Note {search_title}"
+            else:
+                return f"{RED}Tag {search_tag} is not among the Note tags of {search_title}{RESET}"
+    return f"{RED}Note {search_title} not found{RESET}"
 
 
 # --- Notes
@@ -464,6 +473,7 @@ COMMANDS = {
     add_email: ("add_email", "email_add"),
     add_note: ("add_note", "note_add"),
     add_tag: ("add_tag", "tag_add"),
+    delete_tag: ("delete_tag", "tag_delete"),
     change_tag: ("change_tag", "tag_change"),
     change: ("change", "edit"),
     change_name: ("change_name", "name_change"),
