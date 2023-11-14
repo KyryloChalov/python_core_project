@@ -48,9 +48,8 @@ HELP_LIST = [
     f"\t{YELLOW}list_notes {GRAY}<pages>                       {RESET} - show all notes, {GRAY}<pages>(optional) - lines per page{RESET}",
     f"\t{YELLOW}sort_path {CYAN}<path>                         {RESET} - sort file in the folders",
     f"\t{YELLOW}exit                                     {RESET} - exit from PhoneBook",
-    f"\t{YELLOW}sort <path_folder>                             {RESET} - sorting folder 'path_folder'",
     f"\t{YELLOW}help                                     {RESET} - this help-page",
-    #29
+    #30
 ]
 
 HELP_LIST_ADD = [0, 1, 2, 3, 4, 5, 6, 7, 8]
