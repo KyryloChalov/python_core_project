@@ -453,7 +453,7 @@ def birthday(days=0):
             if int(rec.days_to_birthday(rec.birthday)[0]) <= int(days):
                 list_birthday.append(rec)
     if len(list_birthday) == 0:
-        return f'{RED}there are no contacts whose birthday is {"in the next "+days+" days" if days else "today"}{RESET}'
+        return f'{RED}there are no contacts whose birthday is {"in the next "+str(days)+" days" if days else "today"}{RESET}'
 
     for rec in list_birthday:
         result += str(rec) + "\n"
