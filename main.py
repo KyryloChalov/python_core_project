@@ -63,8 +63,10 @@ def user_error(func):
             return f"{RED}the phone number must contains only digits, format: '0671234567' or '+380671234567'{RESET}"
         except EmailError as ee:
             return f"{RED} {ee}{RESET}"
-        except AttributeError:
-            return f"{RED}phone number {args[1]} is not among the contact numbers of {args[0]} {RESET}"
+        #except AttributeError:
+        #    return f"{RED}phone number {args[1]} is not among the contact numbers of {args[0]} {RESET}"
+        except AttributeError as ae:
+            return f"{RED} {ae}{RESET}"
         except TypeError as ve:
             return f"{RED} {ve}{RESET}"
         except NoteError as ne:
