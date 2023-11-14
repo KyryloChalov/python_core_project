@@ -247,10 +247,9 @@ def add_note(*args):
             content_words.append(arg)
 
     content = " ".join(content_words)
-    
-    new_note = Note(title, content, tags)
-    notes.data[title] = new_note
-    
+
+    notes.add_note(title, content, tags)
+    #notes.data[title] = new_note
     return f"Note 'Title: {title} Content:{content} Tags:{', '.join(tags)}' added."
     
 
@@ -281,11 +280,12 @@ def search_notes(keyword, notes):
 @user_error
 def delete_note(*args):
     title = args[0]
-    if title in notes.notes:
-        del notes.notes[title]
-        return f"Note '{title}' deleted."
-    else:
-        return f"Note '{title}' not found."
+    notes.delete_note(title)
+    return f"Note '{title}' deleted."
+    # if title in notes.data:
+    #     del notes.notes[title]
+    #     return f"Note '{title}' deleted."
+    # else:
 
 
 def add_content(*args):  # воно ж change_content
