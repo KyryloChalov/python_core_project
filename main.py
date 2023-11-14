@@ -477,6 +477,7 @@ COMMANDS = {
     phone: ("phone",),
     note: ("note",),
     find: ("find",),
+    sorting: ("sorting", "sort_path"),
 }
 
 

@@ -32,6 +32,7 @@ HELP_LIST = [
     f"\t{YELLOW}change_address {CYAN}<name> <new_address>      {RESET} - change the phone number for an existing contact",
     f"\t{YELLOW}change_email {CYAN}<name> <email> <new_email>  {RESET} - change the phone number for an existing contact",
     f"\t{YELLOW}change_note {CYAN}<title> <new_content>        {RESET} - change the existing note",
+    f"\t{YELLOW}change_tag {CYAN}<title> <tag>                 {RESET} - delete one phone number from an existing contact",
     #15
     f"\t{YELLOW}delete_contact {CYAN}<name>                    {RESET} - remove an existing contact",
     f"\t{YELLOW}delete_phone {CYAN}<name> <phone>              {RESET} - delete one phone number from an existing contact",
@@ -45,10 +46,11 @@ HELP_LIST = [
     f"\t{YELLOW}birthdays {CYAN}<days>                         {RESET} - a list of contacts who have a birthday within {GRAY}<days>{RESET} days",
     f"\t{YELLOW}list {GRAY}<pages>                             {RESET} - show all contacts, {GRAY}<pages>(optional) - lines per page{RESET}",
     f"\t{YELLOW}list_notes {GRAY}<pages>                       {RESET} - show all notes, {GRAY}<pages>(optional) - lines per page{RESET}",
+    f"\t{YELLOW}sort_path {CYAN}<path>                         {RESET} - sort file in the folders",
     f"\t{YELLOW}exit                                     {RESET} - exit from PhoneBook",
     f"\t{YELLOW}help                                     {RESET} - this help-page",
     #28
-    f"\t{YELLOW}change_tag {CYAN}<title> <tag>                 {RESET} - delete one phone number from an existing contact",
+    
 ]
 
 HELP_LIST_ADD = [0, 1, 2, 3, 4, 5, 6, 7, 8]
