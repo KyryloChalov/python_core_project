@@ -413,6 +413,26 @@ def unknown(*_):
     return f"{RED}Unknown command. Try again{RESET}"
 
 
+# from datetime import datetime
+
+
+def birthday(days=0):
+    list_birthday = []
+    result = f"  === Contacts whose birthday is {"in the next "+days+" days" if days else "today"} ===\n"
+    for item in book:
+        rec = get_record_or_error(item, book)
+        if rec.birthday:
+            if int(rec.days_to_birthday(rec.birthday)[0]) <= int(days):
+                list_birthday.append(rec)
+    if len(list_birthday) == 0:
+        return f"{RED}there are no contacts whose birthday is {"in the next "+days+" days" if days else "today"}{RESET}"
+
+    for rec in list_birthday:
+        result += str(rec) + "\n"
+    result += "  --- End of List --- "
+    return result
+
+
 # =============================================
 #                main
 # =============================================
@@ -440,7 +460,8 @@ COMMANDS = {
     del_email: ("delete_email", "del_email"),
     delete_note: ("delete_note", "del_note"),
     name_find: ("name", "find_name"),
-    get_birthdays_on_date: ("birthdays", "find_birthdays", "bd"),
+    birthday: ("birthdays", "birthday", "find_birthdays", "bd"),
+    # get_birthdays_on_date: ("birthdays", "find_birthdays", "bd"),
     search: ("search", "seek", "find_any"),
     help_page: ("help",),
     say_hello: ("hello", "hi"),
@@ -467,73 +488,55 @@ def parser(text: str):
 
 def func_completer(CMD):
     comp_dict = {}
-    sorted_command = []
-    for i in CMD.values():
-        for k in i:
-            sorted_command.append(k)
-    # sorted_command_2 = [
-    #     "add_address",
-    #     "add_contact",
-    #     "add_birthday",
-    #     "add_contact",
-    #     "add_email",
-    #     "add_note",
-    #     "add_phones",
-    #     "add_tag",
-    #     "change_name",
-    #     "change_phone",
-    #     "change_address",
-    #     "change_email",
-    #     "change_note",
-    #     "del_phone",
-    #     "delete_record",
-    #     "del_address",
-    #     "del_email",
-    #     "delete_note",
-    #     "edit_name",
-    #     "edit_phone",
-    #     "edit_address",
-    #     "edit_email",
-    #     "edit_note",
-    #     "get_birthdays_on_date",
-    #     "help",
-    #     "find_name",
-    #     "search",
-    #     "hello",
-    #     "show_all",
-    #     "show_notes",
-    #     "list",
-    #     "good_bay",
-    #     "by",
-    # ]
-    # for key in sorted_command:
-    #     matching_key = next(
-    #         (
-    #             existing_key
-    #             for existing_key in comp_dict.keys()
-    #             if key.startswith(existing_key)
-    #         ),
-    #         None,
-    #     )
-    #     if matching_key is None:
-    #         comp_dict[key] = None
-    #     else:
-    #         key_suffix = key[len(matching_key) :].strip()
-    #         if comp_dict[matching_key] is None:
-    #             comp_dict[matching_key] = {key_suffix}
-    #         else:
-    #             comp_dict[matching_key].add(key_suffix)
-    # print(f"{comp_dict = }")
-    print(f"{sorted_command = }")
+    # sorted_command = []
+    # for i in CMD.values():
+    #     for k in i:
+    #         sorted_command.append(k)
+    sorted_command = [
+        # 'add_record',
+        "add_contact",
+        "add_phone",
+        "add_phones",
+        "add_birthday",
+        "change_birthday",
+        "add_address",
+        "change_address",
+        "add_email",
+        "add_note",
+        "add_tag",
+        "change_name",
+        "change_phone",
+        "edit_phone",
+        "change_address",
+        "edit_address",
+        "change_email",
+        "change_note",
+        "edit_note",
+        "delete_phone",
+        "delete_contact",
+        "delete_record",
+        "delete_address",
+        "delete_email",
+        "delete_note",
+        "find_name",
+        "birthdays",
+        "search",
+        "find_any",
+        "help",
+        "show",
+        "list",
+        "show_notes",
+        "list_notes",
+        "exit",
+        "close",
+    ]
     for i in sorted_command:
-        print(f"{i = }")
-        comp_dict.append()
-    # return sorted_command
+        # print(f"'{i}',")
+        comp_dict.update({i: None})
     return comp_dict
 
 
-# completer = NestedCompleter.from_nested_dict(func_completer(COMMANDS))
-# completer = func_completer(COMMANDS)
+completer = NestedCompleter.from_nested_dict(func_completer(COMMANDS))
 
 
 def main():
@@ -543,8 +546,8 @@ def main():
     notes = notes.read_notes_from_file(NOTE_FILENAME)
     print(say_hello())
     while True:
-        # user_input = prompt(">>>", completer=completer)
-        user_input = input(f"{BLUE}>>{YELLOW}>>{RESET}")
+        user_input = prompt(">>>", completer=completer)
+        # user_input = input(f"{BLUE}>>{YELLOW}>>{RESET}")
         func, data = parser(user_input.strip().lower())
         print(func(*data))
         if func not in [
