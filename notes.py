@@ -11,7 +11,7 @@ class NoteError(Exception):
 
 
 class Title(Field):
-    pass
+    ...
 
 
 class Content(Field):
@@ -29,19 +29,25 @@ class Tags(Field):
     def __init__(self, tags=None):
         super().__init__(tags or [])
 
-    def add_tags(self, new_tags):
-        self.value.extend(new_tags)
-        # self.value += new_tags
+    def extend(self, new_tag):
+        # super()
+        ...
+
+    # def add_tags(self, new_tags):
+    #     self.value.extend(new_tags)
+    #     # self.value += new_tags
 
     def __iter__(self):
         return iter(self.value)
 
 
 class Note:
-    def __init__(self, title, content, tags=None):
+    def __init__(
+        self, title: Title, content: Content | None = None, tags: Tags | None = None
+    ) -> None:
         self.title = Title(title)
-        self.content = Content(content)
-        self.tags = Tags(tags)
+        self.content = Content(content) if content else ""
+        self.tags = [Tags(tags)] if tags else []
 
     # def add_note(self, title, content):
     #     self.notes[title] = content
@@ -67,9 +73,10 @@ class Note:
         tags_str = ""
         # print(f"{self.tags = }")
         if self.tags:
+            # for i in self.tags:
             for item in self.tags:
                 tags_str = ", ".join(item)
-            # print(f"{tags_str = }")
+            print(f"{tags_str = }")
         return f"{GRAY}•{RESET}{blanks}{CYAN}{self.title}{RESET}  {GRAY}: {RESET}{self.content} \t{MAGENTA}{tags_str}{RESET}"
 
 
@@ -77,11 +84,12 @@ class NotesBook(UserDict):
     def __init__(self):
         super().__init__()
 
-    def add_note(self, title, content, *tags):
+    def add_note(self, title, content, tags):
+        # print(f"NotesBook.add_note tags = {tags}")
         new_note = Note(title, content, tags if tags else None)
         self.data[title] = new_note
         # self.data[new_note.name.value] = new_note
-        return f"Note '{title}' has been successfully added.\n\t{self}"
+        return f"Note '{title}' has been successfully added.\n\t{new_note}"
 
     def edit_note(self, title, new_content):
         if title in self.data:
@@ -97,12 +105,39 @@ class NotesBook(UserDict):
         else:
             return f"Note '{title}' not found."
 
-    def add_tags(self, title, tags):  # метод для додавання тегів
-        if title in self.data:
-            self.data[title].tags.extend(tags)
-            return f"Tags {', '.join(tags)} added to the note with title '{title}'."
-        else:
-            raise NoteError(f"Note with title '{title}' not found.")
+    def add_tags(self, title, new_tags):  # метод для додавання тегів
+        ... 
+        # print(f"1. {     new_tags = } {     title = }")
+        # lst = []
+        # # self.title = Title(title)
+        # # self.tags = Tags(tags)
+        # # print(f"2. {self.tags = } {self.title = }")
+        # if title in self.data:
+        #     print(f"3.{      new_tags = } {     title = }")
+        #     print(f"before {self.data[title].tags = }")
+        #     for i in self.data[title].tags:
+        #         print(f"{i = }")
+        #         # i.extend(new_tags)
+        #         # i += new_tags
+        #         print(f"{i = }")
+        #         for k in i:
+        #             print(f"{k = }")
+        #             lst.append(k)
+                
+        #         print(f"{lst = }")
+        #         # lst.append(new_tags[0])
+        #         print(f"{lst = }")
+                
+        #         self.data[title].tags = lst 
+        #     print(f"after {self.data[title].tags = }")
+        #     self.data[title].tags.extend(new_tags)
+        #     # print(self.data[title].tags)
+        #     # self.data[title].tags = Tags([tags])
+        #     print(f"after after {self.data[title].tags = }")
+        #     print(f"{self.data = }")
+        #     return f"Tags {', '.join(new_tags)} added to the note with title '{title}'."
+        # else:
+        #     raise NoteError(f"Note with title '{title}' not found.")
 
     def search_notes_by_tag(self, tag):
         matching_notes = []
