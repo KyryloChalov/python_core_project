@@ -62,6 +62,7 @@ class Note:
     #         return f"Note '{title}' not found."
 
     def __str__(self) -> str:
+        blanks = " " * (LEN_OF_NAME_FIELD - len(str(self.title)))
         # tags_str = f"Tags {''.join(t for t in self.tags)}" if len(self.tags)>0 else ""
         tags_str = ""
         # print(f"{self.tags = }")
@@ -69,7 +70,7 @@ class Note:
             for item in self.tags:
                 tags_str = ", ".join(item)
             # print(f"{tags_str = }")
-        return f"{GRAY}. {RESET}{CYAN}{self.title}{RESET}  \t {GRAY}: {RESET}{self.content} \t{MAGENTA}{tags_str}{RESET}"
+        return f"{GRAY}•{RESET}{blanks}{CYAN}{self.title}{RESET}  {GRAY}: {RESET}{self.content} \t{MAGENTA}{tags_str}{RESET}"
 
 
 class NotesBook(UserDict):
