@@ -38,28 +38,28 @@ class Tags(Field):
 
 
 class Note:
-    def __init__(self, title, content, tags=None):
-        self.title = Title(title)
-        self.content = Content(content)
-        self.tags = Tags(tags)
+    # def __init__(self, title, content, tags=None):
+    #     self.title = Title(title)
+    #     self.content = Content(content)
+    #     self.tags = Tags(tags)
 
-    def add_note(self, title, content):
-        self.notes[title] = content
-        return f"note {self.title} has been successfully added \n\t{self}"
+    # def add_note(self, title, content):
+    #     self.notes[title] = content
+    #     return f"note {self.title} has been successfully added \n\t{self}"
 
-    def edit_note(self, title, new_content):
-        if title in self.notes:
-            self.notes[title] = new_content
-            return f"Note '{title}' edited."
-        else:
-            return f"Note '{title}' not found."
+    # def edit_note(self, title, new_content):
+    #     if title in self.notes:
+    #         self.notes[title] = new_content
+    #         return f"Note '{title}' edited."
+    #     else:
+    #         return f"Note '{title}' not found."
 
-    def delete_note(self, title):
-        if title in self.notes:
-            del self.notes[title]
-            return f"Note '{title}' deleted."
-        else:
-            return f"Note '{title}' not found."
+    # def delete_note(self, title):
+    #     if title in self.notes:
+    #         del self.notes[title]
+    #         return f"Note '{title}' deleted."
+    #     else:
+    #         return f"Note '{title}' not found."
 
     def __str__(self) -> str:
         tags_str = "".join(t.value for t in self.tags)
@@ -71,6 +71,30 @@ class NotesBook(UserDict):
     
     def __init__(self):
         super().__init__()
+        
+        
+    def add_note(self, title, content, *tags):
+        new_note = Note(title, content, tags if tags else None)
+        print(f"Tags added to the note '{title}': {new_note.tags}")
+        self.data[title] = new_note
+        return f"Note '{title}' has been successfully added.\n\t{self}"
+    
+    
+    def edit_note(self, title, new_content):
+        if title in self.data:
+            self.data[title] = new_content
+            return f"Note '{title}' edited."
+        else:
+            return f"Note '{title}' not found."
+        
+        
+    def delete_note(self, title):
+        if title in self.data:
+            del self.data[title]
+            return f"Note '{title}' deleted."
+        else:
+            return f"Note '{title}' not found."
+    
 
     def add_tags(self, title, tags):  # метод для додавання тегів
         if title in self.data:
@@ -79,18 +103,21 @@ class NotesBook(UserDict):
         else:
             raise NoteError(f"Note with title '{title}' not found.")
 
-    def search_notes_by_tag(self, tag, sort_by_keywords=False):
-        matching_notes = [
-            note
-            for note in self.data.values()
-            if tag.lower() in map(str.lower, note.tags)
-        ]
-        if sort_by_keywords:
-            matching_notes.sort(key=lambda note: note.keywords)
+    def search_notes_by_tag(self, tag):
+        matching_notes = []
+        for title, note in self.data.items():
+            if tag.lower().strip() in map(str.lower, note.tags.value):
+                matching_notes.append(
+                    f"Note 'Title: {note.title}' Content: {note.content} Tags:{', '.join(map(str, note.tags.value))}"
+                )
+
         if matching_notes:
-            return "\n".join(map(str, matching_notes))
+            
+            sorted_notes = sorted(matching_notes)
+            
+            return "\n".join(sorted_notes)
         else:
-            return "No notes found with the specified tag."
+            return "No matching notes found."
 
     def search_notes(self, keyword):
         result = []
@@ -117,3 +144,10 @@ class NotesBook(UserDict):
         while counter < len(self):
             yield list(self.values())[counter : counter + n]
             counter += n
+            
+            
+    def __str__(self):
+        result = []
+        for title, note in self.data.items():
+            result.append(f"Title: {title}\nContent: {note.content}\nTags: {', '.join(note.tags.value)}\n")
+        return '\n'.join(result) if result else "No notes found."
