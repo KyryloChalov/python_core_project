@@ -38,10 +38,10 @@ class Tags(Field):
 
 
 class Note:
-    # def __init__(self, title, content, tags=None):
-    #     self.title = Title(title)
-    #     self.content = Content(content)
-    #     self.tags = Tags(tags)
+    def __init__(self, title, content, tags=None):
+        self.title = Title(title)
+        self.content = Content(content)
+        self.tags = Tags(tags)
 
     # def add_note(self, title, content):
     #     self.notes[title] = content
@@ -62,8 +62,8 @@ class Note:
     #         return f"Note '{title}' not found."
 
     def __str__(self) -> str:
-        tags_str = "".join(t.value for t in self.tags)
-        tags_str = f"Tags {tags_str}" if tags_str else ""
+        #tags_str = f"Tags {''.join(t for t in self.tags)}" if len(self.tags)>0 else ""
+        tags_str = ""
         return f"Title: {self.title} Text: {self.content} {tags_str}"
 
 
@@ -75,8 +75,8 @@ class NotesBook(UserDict):
         
     def add_note(self, title, content, *tags):
         new_note = Note(title, content, tags if tags else None)
-        print(f"Tags added to the note '{title}': {new_note.tags}")
         self.data[title] = new_note
+        #self.data[new_note.name.value] = new_note
         return f"Note '{title}' has been successfully added.\n\t{self}"
     
     
@@ -146,8 +146,13 @@ class NotesBook(UserDict):
             counter += n
             
             
-    def __str__(self):
-        result = []
-        for title, note in self.data.items():
-            result.append(f"Title: {title}\nContent: {note.content}\nTags: {', '.join(note.tags.value)}\n")
-        return '\n'.join(result) if result else "No notes found."
+    #def __str__(self):
+        #tags_str = "".join(t.value for t in self.tags)
+        #tags_str = f"Tags {tags_str}" if tags_str else ""
+        #return f"Title: {self.title} Text: {self.content} {tags_str}"
+        
+        #result = []
+        #for title, note in self.data.items():
+        #    tags_str = ", ".join(note.tags.value) if note.tags.value else ""
+        #    result.append(f"Title: {title}\nContent: {note.content}\nTags: {tags_str}\n")
+        #return '\n'.join(result) if result else "No notes found."
