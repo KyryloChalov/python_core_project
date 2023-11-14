@@ -208,7 +208,7 @@ class Record:
         if old_email in self.emails:
             self.emails[self.emails.index(old_email)] = new_email
             return f"email {old_email} has been successfully changed to {new_email} for contact {self.name} \n\t{self}"
-        return f"{RED}email {old_email} is not among the contact numbers of {self.name}{RESET} \n\t{self}"
+        return f"{RED}email {old_email} is not among the contact e-mails of {self.name}{RESET} \n\t{self}"
 
     def find_phone(self, phone: Phone):
         phone = Phone(phone)

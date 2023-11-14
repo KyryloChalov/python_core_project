@@ -99,32 +99,23 @@ def add_birthday(*args):
 
 @user_error
 def add_address(*args):
-    addr_str = ""
-    # join args with " " starting from 1
-    addr_str = " ".join(args[1:])
-    print(addr_str)
-    return get_record_or_error(args[0], book).add_address((addr_str))
+    if get_record_or_error(args[0], book):
+        addr_str = ""
+        # join args with " " starting from 1
+        addr_str = " ".join(args[1:])
+        print(addr_str)
+        return get_record_or_error(args[0], book).add_address((addr_str))
+    else:
+        return f"{RED}contact {WHITE}{args[0]}{RED} not found in address book{RESET}"
 
 
 @user_error
 def add_email(*args):
-    return get_record_or_error(args[0], book).add_email(args[1])
+    if get_record_or_error(args[0], book):
+        return get_record_or_error(args[0], book).add_email(args[1])
+    else:
+        return f"{RED}contact {WHITE}{args[0]}{RED} not found in address book{RESET}"
 
-
-# @user_error
-# def add_note(*_):
-#     title = input("Enter Note Title >>> ")
-#     if not title:
-#         raise NoteError("Note title cannot be empty")
-#     title = Title(title)
-#     content = input("Note Text >>> ")
-#     if not content:
-#         raise NoteError("Note text cannot be empty")
-#     tags = input("Add Note Tags, separated by comma >>> ")
-#     tags = [(tag.strip()) for tag in tags.split(",")] if tags else None
-#     note = Note(title, content, tags)
-#     notes.add_note(note)
-#     return f"Note created successfully"
 
 
 @user_error
@@ -169,38 +160,50 @@ def change_name(*args):
 
 @user_error
 def change_phone(*args):
-    return get_record_or_error(args[0], book).edit_phone(Phone(args[1]), Phone(args[2]))
+    if get_record_or_error(args[0], book):
+        return get_record_or_error(args[0], book).edit_phone(Phone(args[1]), Phone(args[2]))
+    else:
+        return f"{RED}contact {WHITE}{args[0]}{RED} not found in address book{RESET}"
 
 
 @user_error
 def change_email(*args):
-    return get_record_or_error(args[0], book).edit_email(Email(args[1]), Email(args[2]))
+    if get_record_or_error(args[0], book):
+        return get_record_or_error(args[0], book).edit_email(Email(args[1]), Email(args[2]))
+    else:
+        return f"{RED}contact {WHITE}{args[0]}{RED} not found in address book{RESET}"
 
 
 @user_error
 def del_phone(*args):
-    return get_record_or_error(args[0], book).remove_phone(Phone(args[1]))
+    if get_record_or_error(args[0], book):
+        return get_record_or_error(args[0], book).remove_phone(Phone(args[1]))
+    else:
+        return f"{RED}contact {WHITE}{args[0]}{RED} not found in address book{RESET}"
 
 
 @user_error
 def del_email(*args):
-    return get_record_or_error(args[0], book).remove_email(Email(args[1]))
-
-
-# @user_error
-# def delete_note(*args):
-#     ...
-#     return f"Not implemented yet"
-
+    if get_record_or_error(args[0], book):
+        return get_record_or_error(args[0], book).remove_email(Email(args[1]))
+    else:
+        return f"{RED}contact {WHITE}{args[0]}{RED} not found in address book{RESET}"
+    
 
 @user_error
 def change_address(*args):
-    return get_record_or_error(args[0], book).edit_address(args[1])
+    if get_record_or_error(args[0], book):
+        return get_record_or_error(args[0], book).edit_address(args[1])
+    else:
+        return f"{RED}contact {WHITE}{args[0]}{RED} not found in address book{RESET}"
 
 
 @user_error
 def del_address(*args):
-    return get_record_or_error(args[0], book).remove_address()
+    if get_record_or_error(args[0], book):
+        return get_record_or_error(args[0], book).remove_address()
+    else:
+        return f"{RED}contact {WHITE}{args[0]}{RED} not found in address book{RESET}"
 
 
 @user_error
