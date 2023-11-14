@@ -219,11 +219,15 @@ def add_tag(*args):
     return notes.add_tags(title, tags)
 
 
-@user_error
-def search_notes_by_tag(*args):
-    tag = args[0]
-    sort_by_keywords = args[1:].lower() == "true" if len(args) > 1 else False
-    return notes.search_notes_by_tag(tag, sort_by_keywords)
+def search_notes_by_tag(notes, tag):
+        return notes.search_notes_by_tag(tag)
+
+
+# @user_error
+# def search_notes_by_tag(*args):
+#     tag = args[0]
+#     sort_by_keywords = args[1:].lower() == "true" if len(args) > 1 else False
+#     return notes.search_notes_by_tag(tag, sort_by_keywords)
 
 
 @user_error
@@ -231,21 +235,22 @@ def add_note(*args):
     title = args[0]
     content_start_index = 1
     tags = []
-    #  теги в аргументах
-    content = " ".join(args[content_start_index:])
-    for i, arg in enumerate(args[content_start_index:], start=content_start_index):
+    
+    # теги в аргументах
+    content_words = []
+    for arg in args[content_start_index:]:
         if arg.startswith("#"):
-            tag = (
-                arg.lstrip("#, ").rstrip(", ").replace("#", "")
-            )  # видаляємо # і зайві пробіли
-            tags.append(tag)
-            content = " ".join(args[content_start_index:i])
+            tags.append(arg)
+        else:
+            content_words.append(arg)
 
-    # content = " ".join(args[content_start_index:args.index(f"--tags={+tags[0]}") if tags else len(args)])
+    content = " ".join(content_words)
+    
     new_note = Note(title, content, tags)
     notes.data[title] = new_note
+    
     return f"Note 'Title: {title} Content:{content} Tags:{', '.join(tags)}' added."
-
+    
 
 @user_error
 def edit_note(title, new_content):
@@ -285,7 +290,7 @@ def add_content(*args):  # воно ж change_content
     ...
 
 
-def del_content(*args):  # а воно треба???
+def del_content(*args):  # а воно треба??? - а нащо лишати заголовок, тег без опису?
     ...
 
 
