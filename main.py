@@ -535,6 +535,7 @@ def func_completer(CMD):
         "list_notes",
         "exit",
         "close",
+        "sort_path"
     ]
     for i in sorted_command:
         # print(f"'{i}',")
