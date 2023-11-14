@@ -52,11 +52,11 @@ chat_bot
 
 The script has autocomplete functionality, which means that when you enter a command, you can see suggestions with available options. For example, if you type `add_`, you will see `add_contact`, `add_phone`, `add_bd`, etc.
 
-![autocomplete.gif]
+![autocomplete](https://github.com/KyryloChalov/python_core_team9/assets/20092968/655a38f4-43fa-4d3b-b1fb-5f6d5ca6b5b5)
 
 You can also run the `help` command to see all available commands and their descriptions. Here is a screenshot of the help page:
 
-![help.jpg]
+![help1](https://github.com/KyryloChalov/python_core_team9/assets/20092968/e0644487-7b0a-4a42-9156-93b7d711c523)
 
 Here is a list of commands with some examples:
 
