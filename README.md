@@ -54,6 +54,12 @@ The script has autocomplete functionality, which means that when you enter a com
 
 ![autocomplete](https://github.com/KyryloChalov/python_core_team9/assets/20092968/655a38f4-43fa-4d3b-b1fb-5f6d5ca6b5b5)
 
+
+
+https://github.com/KyryloChalov/python_core_team9/assets/20092968/47dff6ae-2ec0-402e-bafe-5cc6128cf722
+
+
+
 You can also run the `help` command to see all available commands and their descriptions. Here is a screenshot of the help page:
 
 ![help1](https://github.com/KyryloChalov/python_core_team9/assets/20092968/e0644487-7b0a-4a42-9156-93b7d711c523)
