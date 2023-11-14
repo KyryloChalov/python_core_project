@@ -423,14 +423,14 @@ def unknown(*_):
 
 def birthday(days=0):
     list_birthday = []
-    result = f"  === Contacts whose birthday is {"in the next "+days+" days" if days else "today"} ===\n"
+    result = f'  === Contacts whose birthday is {"in the next "+days+" days" if days else "today"} ===\n'
     for item in book:
         rec = get_record_or_error(item, book)
         if rec.birthday:
             if int(rec.days_to_birthday(rec.birthday)[0]) <= int(days):
                 list_birthday.append(rec)
     if len(list_birthday) == 0:
-        return f"{RED}there are no contacts whose birthday is {"in the next "+days+" days" if days else "today"}{RESET}"
+        return f'{RED}there are no contacts whose birthday is {"in the next "+days+" days" if days else "today"}{RESET}'
 
     for rec in list_birthday:
         result += str(rec) + "\n"
@@ -477,6 +477,7 @@ COMMANDS = {
     phone: ("phone",),
     note: ("note",),
     find: ("find",),
+    sorting: ("sorting", "sort_path"),
 }
 
 
