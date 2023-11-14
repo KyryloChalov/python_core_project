@@ -23,7 +23,8 @@ HELP_LIST = [
     f'\t{YELLOW}add_bd {CYAN}<name> <birthday>                 {RESET} - add the birthday data ("dd-mm-yyyy") for an existing contact',
     f"\t{YELLOW}add_address {CYAN}<name> <address>             {RESET} - add the address for an existing contact",
     f"\t{YELLOW}add_email {CYAN}<name> <e-mail>                {RESET} - add the e-mail for an existing contact",
-    f"\t{YELLOW}add_note {CYAN}<title> <content> <#tag>        {RESET} - add the new note",
+    f"\t{YELLOW}add_note {CYAN}<title> <content> <#tag>        {RESET} - add the new note. The title cannot contain spaces.",
+    f"\t{GRAY}                                                (if you need several words in the title, use `_` or `-` between words)",
     f"\t{YELLOW}add_tag {CYAN}<title> <#tag>                   {RESET} - add the #tag for an existing note",
     #9
     f"\t{YELLOW}change_name {CYAN}<name> <new_name>            {RESET} - change the name for an existing contact",
@@ -46,7 +47,7 @@ HELP_LIST = [
     f"\t{YELLOW}birthdays {CYAN}<days>                         {RESET} - a list of contacts who have a birthday within {GRAY}<days>{RESET} days",
     f"\t{YELLOW}list {GRAY}<pages>                             {RESET} - show all contacts, {GRAY}<pages>(optional) - lines per page{RESET}",
     f"\t{YELLOW}list_notes {GRAY}<pages>                       {RESET} - show all notes, {GRAY}<pages>(optional) - lines per page{RESET}",
-    f"\t{YELLOW}sort_path {CYAN}<path>                         {RESET} - sort file in the folders",
+    f"\t{YELLOW}sort_path {CYAN}<path>                         {RESET} - sort files by in the folders",
     f"\t{YELLOW}exit                                     {RESET} - exit from PhoneBook",
     f"\t{YELLOW}help                                     {RESET} - this help-page",
     #30
