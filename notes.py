@@ -62,39 +62,39 @@ class Note:
     #         return f"Note '{title}' not found."
 
     def __str__(self) -> str:
-        #tags_str = f"Tags {''.join(t for t in self.tags)}" if len(self.tags)>0 else ""
+        # tags_str = f"Tags {''.join(t for t in self.tags)}" if len(self.tags)>0 else ""
         tags_str = ""
-        return f"Title: {self.title} Text: {self.content} {tags_str}"
+        # print(f"{self.tags = }")
+        if self.tags:
+            for item in self.tags:
+                tags_str = ", ".join(item)
+            # print(f"{tags_str = }")
+        return f"{GRAY}. {RESET}{CYAN}{self.title}{RESET}  \t {GRAY}: {RESET}{self.content} \t{MAGENTA}{tags_str}{RESET}"
 
 
 class NotesBook(UserDict):
-    
     def __init__(self):
         super().__init__()
-        
-        
+
     def add_note(self, title, content, *tags):
         new_note = Note(title, content, tags if tags else None)
         self.data[title] = new_note
-        #self.data[new_note.name.value] = new_note
+        # self.data[new_note.name.value] = new_note
         return f"Note '{title}' has been successfully added.\n\t{self}"
-    
-    
+
     def edit_note(self, title, new_content):
         if title in self.data:
             self.data[title] = new_content
             return f"Note '{title}' edited."
         else:
             return f"Note '{title}' not found."
-        
-        
+
     def delete_note(self, title):
         if title in self.data:
             del self.data[title]
             return f"Note '{title}' deleted."
         else:
             return f"Note '{title}' not found."
-    
 
     def add_tags(self, title, tags):  # метод для додавання тегів
         if title in self.data:
@@ -112,9 +112,8 @@ class NotesBook(UserDict):
                 )
 
         if matching_notes:
-            
             sorted_notes = sorted(matching_notes)
-            
+
             return "\n".join(sorted_notes)
         else:
             return "No matching notes found."
@@ -144,15 +143,14 @@ class NotesBook(UserDict):
         while counter < len(self):
             yield list(self.values())[counter : counter + n]
             counter += n
-            
-            
-    #def __str__(self):
-        #tags_str = "".join(t.value for t in self.tags)
-        #tags_str = f"Tags {tags_str}" if tags_str else ""
-        #return f"Title: {self.title} Text: {self.content} {tags_str}"
-        
-        #result = []
-        #for title, note in self.data.items():
-        #    tags_str = ", ".join(note.tags.value) if note.tags.value else ""
-        #    result.append(f"Title: {title}\nContent: {note.content}\nTags: {tags_str}\n")
-        #return '\n'.join(result) if result else "No notes found."
+
+    # def __str__(self):
+    # tags_str = "".join(t.value for t in self.tags)
+    # tags_str = f"Tags {tags_str}" if tags_str else ""
+    # return f"Title: {self.title} Text: {self.content} {tags_str}"
+
+    # result = []
+    # for title, note in self.data.items():
+    #    tags_str = ", ".join(note.tags.value) if note.tags.value else ""
+    #    result.append(f"Title: {title}\nContent: {note.content}\nTags: {tags_str}\n")
+    # return '\n'.join(result) if result else "No notes found."
