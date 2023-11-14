@@ -180,5 +180,5 @@ if __name__ == "__main__":
     # result = get_birthdays_on_date(book, 7)
     # print(result)
 
-    # print(birthday(7))
+    print(birthday(7))
     # print(help_page())

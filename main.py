@@ -223,8 +223,9 @@ def name_find(*args):
 @user_error
 def add_tag(*args):
     title = args[0]
-    tags = args[1:]
-    return notes.add_tags(title, tags)
+    new_tags = args[1:]
+    print(f"func: {title = } {new_tags = }")
+    return notes.add_tags(title, new_tags)
 
 
 def search_notes_by_tag(notes, tag):
@@ -254,9 +255,10 @@ def add_note(*args):
 
     content = " ".join(content_words)
 
-    notes.add_note(title, content, tags)
+    return notes.add_note(title, content, tags)
+    # print({get_record_or_error(args[0], notes)})
     # notes.data[title] = new_note
-    return f"Note 'Title: {title} Content:{content} Tags:{', '.join(tags)}' added."
+    # return f"Note 'Title: {title} Content:{content} Tags: {', '.join(tags)}' added."
 
 
 @user_error
@@ -286,8 +288,9 @@ def search_notes(keyword, notes):
 @user_error
 def delete_note(*args):
     title = args[0]
-    notes.delete_note(title)
-    return f"Note '{title}' deleted."
+    # notes.delete_note(title)
+    return notes.delete_note(title)
+    # return f"Note '{title}' deleted."
     # if title in notes.data:
     #     del notes.notes[title]
     #     return f"Note '{title}' deleted."
@@ -332,7 +335,7 @@ def delete_tag(*args):
     return f"{RED}Note {search_title} not found{RESET}"
 
 
-# --- Notes
+# --- Notes end
 
 
 def search(*args):
@@ -385,7 +388,7 @@ def show_notes(*args):
         for item in _:
             print(item)
             count += 1
-        if count < len(book):
+        if count < len(notes):
             input(f"  Press Enter for next page: ")
     return "  --- End of List ---"
 
@@ -453,7 +456,7 @@ def unknown(*_):
 
 def birthday(days=0):
     list_birthday = []
-    result = f'  === Contacts whose birthday is {"in the next "+days+" days" if days else "today"} ===\n'
+    result = f'  === Contacts whose birthday is {"in the next "+str(days)+" days" if days else "today"} ===\n'
     for item in book:
         rec = get_record_or_error(item, book)
         if rec.birthday:
