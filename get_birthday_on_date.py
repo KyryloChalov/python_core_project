@@ -14,6 +14,18 @@ from classes import (
     NoContactError,
 )
 
+from constants import RED, RESET
+
+def user_error(func):
+    def inner(*args):
+        try:
+            return func(*args)
+        except TypeError:
+            return f"{RED}not enough params{RESET}\n\tFormat: '<command> <number of days>'\n\tUse 'help' for information"
+        except AttributeError:
+            return f"{RED}Address book not created. Please create Address book first{RESET}"
+    return inner
+
 def get_period(start_date: date, days: int) -> dict:
     result = {}
     for _ in range(days + 1):
@@ -21,6 +33,7 @@ def get_period(start_date: date, days: int) -> dict:
         start_date += timedelta(1)
     return result
 
+@user_error
 def get_birthdays_on_date(users: AddressBook, days=None):
     Birthday_people = []
 
