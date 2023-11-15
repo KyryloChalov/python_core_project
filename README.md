@@ -56,9 +56,6 @@ The script has autocomplete functionality, which means that when you enter a com
 
 
 
-https://github.com/KyryloChalov/python_core_team9/assets/20092968/47dff6ae-2ec0-402e-bafe-5cc6128cf722
-
-
 
 You can also run the `help` command to see all available commands and their descriptions. Here is a screenshot of the help page:
 
