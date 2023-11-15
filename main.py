@@ -261,12 +261,14 @@ def add_note(*args):
 
 
 @user_error
-def edit_note(title, new_content):
-    # Перевірка наявності тайтлу в notes
+def edit_note(title, *args):
+    # Перевірка наявності тайтлу в 
+    new_content = ' '.join(args) 
+    print(f"{new_content = }")
     if title in notes.data:
         # Змінюємо тільки content
         notes.data[title].content.edit_content(new_content)
-        return f"Note '{title}' changed. New content: '{new_content}'"
+        return f"Note '{title}' changed. New content: '{new_content}'\n\t{notes.data[title]}"
     else:
         return f"note '{title}' not found."
 
