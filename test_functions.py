@@ -14,6 +14,7 @@ from main import (
     delete_record,
     add_address,
     add_email,
+    birthday,
 )
 from get_birthday_on_date import get_birthdays_on_date
 
@@ -171,8 +172,13 @@ if __name__ == "__main__":
     print(GREEN + "\n     друкуємо список контактів по 10 рядків на сторінку" + RESET)
     # print(show_all(10)
 
+    print(add_contact("Person_15", "789544555550"))
+
     print(show_all())
 
-    print(GREEN + "\n     контакти, в яких день народження " + RESET)
-    result = get_birthdays_on_date(book)
-    print(result)
+    # print(GREEN + "\n     контакти, в яких день народження " + RESET)
+    # result = get_birthdays_on_date(book, 7)
+    # print(result)
+
+    print(birthday(7))
+    # print(help_page())

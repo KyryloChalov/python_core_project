@@ -15,6 +15,14 @@ from constants import (
     TITLE,
     FILENAME,
     NOTE_FILENAME,
+    HELP_LIST,
+    HELP_LIST_ADD,
+    HELP_LIST_EDIT,
+    HELP_LIST_DEL,
+    HELP_LIST_CONTACT,
+    HELP_LIST_PHONE,
+    HELP_LIST_NOTE,
+    HELP_LIST_FIND,
     RED,
     BLUE,
     YELLOW,
@@ -25,18 +33,13 @@ from constants import (
     MAGENTA,
 )
 
-from notes import (
-    NotesBook,
-    NoteError,
-    Title,
-    Content,
-    Tags,
-    Note
-) 
+from notes import NotesBook, NoteError, Title, Content, Tags, Note
 
 from get_birthday_on_date import get_birthdays_on_date
 
-# from notes import NotesBook
+from prompt_toolkit.completion import NestedCompleter
+
+from prompt_toolkit import prompt
 
 from sort_path import sorting
 
@@ -60,8 +63,10 @@ def user_error(func):
             return f"{RED}the phone number must contains only digits, format: '0671234567' or '+380671234567'{RESET}"
         except EmailError as ee:
             return f"{RED} {ee}{RESET}"
-        except AttributeError:
-            return f"{RED}phone number {args[1]} is not among the contact numbers of {args[0]} {RESET}"
+        # except AttributeError:
+        #    return f"{RED}phone number {args[1]} is not among the contact numbers of {args[0]} {RESET}"
+        except AttributeError as ae:
+            return f"{RED} {ae}{RESET}"
         except TypeError as ve:
             return f"{RED} {ve}{RESET}"
         except NoteError as ne:
@@ -94,31 +99,22 @@ def add_birthday(*args):
 
 @user_error
 def add_address(*args):
-    addr_str = ""
-    # join args with " " starting from 1
-    addr_str = " ".join(args[1:])
-    print(addr_str)
-    return get_record_or_error(args[0], book).add_address((addr_str))
+    if get_record_or_error(args[0], book):
+        addr_str = ""
+        # join args with " " starting from 1
+        addr_str = " ".join(args[1:])
+        print(addr_str)
+        return get_record_or_error(args[0], book).add_address((addr_str))
+    else:
+        return f"{RED}contact {WHITE}{args[0]}{RED} not found in address book{RESET}"
 
 
 @user_error
 def add_email(*args):
-    return get_record_or_error(args[0], book).add_email(args[1])
-
-# @user_error
-# def add_note(*_):
-#     title = input("Enter Note Title >>> ")
-#     if not title:
-#         raise NoteError("Note title cannot be empty")
-#     title = Title(title)
-#     content = input("Note Text >>> ")
-#     if not content:
-#         raise NoteError("Note text cannot be empty")
-#     tags = input("Add Note Tags, separated by comma >>> ")
-#     tags = [(tag.strip()) for tag in tags.split(",")] if tags else None
-#     note = Note(title, content, tags)
-#     notes.add_note(note)
-#     return f"Note created successfully"
+    if get_record_or_error(args[0], book):
+        return get_record_or_error(args[0], book).add_email(args[1])
+    else:
+        return f"{RED}contact {WHITE}{args[0]}{RED} not found in address book{RESET}"
 
 
 @user_error
@@ -163,36 +159,54 @@ def change_name(*args):
 
 @user_error
 def change_phone(*args):
-    return get_record_or_error(args[0], book).edit_phone(Phone(args[1]), Phone(args[2]))
+    if get_record_or_error(args[0], book):
+        return get_record_or_error(args[0], book).edit_phone(
+            Phone(args[1]), Phone(args[2])
+        )
+    else:
+        return f"{RED}contact {WHITE}{args[0]}{RED} not found in address book{RESET}"
 
 
 @user_error
 def change_email(*args):
-    return get_record_or_error(args[0], book).edit_email(Email(args[1]), Email(args[2]))
+    if get_record_or_error(args[0], book):
+        return get_record_or_error(args[0], book).edit_email(
+            Email(args[1]), Email(args[2])
+        )
+    else:
+        return f"{RED}contact {WHITE}{args[0]}{RED} not found in address book{RESET}"
 
 
 @user_error
 def del_phone(*args):
-    return get_record_or_error(args[0], book).remove_phone(Phone(args[1]))
+    if get_record_or_error(args[0], book):
+        return get_record_or_error(args[0], book).remove_phone(Phone(args[1]))
+    else:
+        return f"{RED}contact {WHITE}{args[0]}{RED} not found in address book{RESET}"
 
 
 @user_error
 def del_email(*args):
-    return get_record_or_error(args[0], book).remove_email(Email(args[1]))
+    if get_record_or_error(args[0], book):
+        return get_record_or_error(args[0], book).remove_email(Email(args[1]))
+    else:
+        return f"{RED}contact {WHITE}{args[0]}{RED} not found in address book{RESET}"
 
-# @user_error
-# def delete_note(*args):
-#     ...
-#     return f"Not implemented yet"
 
 @user_error
 def change_address(*args):
-    return get_record_or_error(args[0], book).edit_address(args[1])
+    if get_record_or_error(args[0], book):
+        return get_record_or_error(args[0], book).edit_address(args[1])
+    else:
+        return f"{RED}contact {WHITE}{args[0]}{RED} not found in address book{RESET}"
 
 
 @user_error
 def del_address(*args):
-    return get_record_or_error(args[0], book).remove_address()
+    if get_record_or_error(args[0], book):
+        return get_record_or_error(args[0], book).remove_address()
+    else:
+        return f"{RED}contact {WHITE}{args[0]}{RED} not found in address book{RESET}"
 
 
 @user_error
@@ -209,15 +223,19 @@ def name_find(*args):
 @user_error
 def add_tag(*args):
     title = args[0]
-    tags = args[1:]
+    tags = list(args[1:])
     return notes.add_tags(title, tags)
 
 
-@user_error
-def search_notes_by_tag(*args):
-    tag = args[0]
-    sort_by_keywords = args[1:].lower() == "true" if len(args) > 1 else False
-    return notes.search_notes_by_tag(tag, sort_by_keywords)
+def search_notes_by_tag(notes, tag):
+    return notes.search_notes_by_tag(tag)
+
+
+# @user_error
+# def search_notes_by_tag(*args):
+#     tag = args[0]
+#     sort_by_keywords = args[1:].lower() == "true" if len(args) > 1 else False
+#     return notes.search_notes_by_tag(tag, sort_by_keywords)
 
 
 @user_error
@@ -225,20 +243,21 @@ def add_note(*args):
     title = args[0]
     content_start_index = 1
     tags = []
-    #  теги в аргументах
-    content = " ".join(args[content_start_index:])
-    for i, arg in enumerate(args[content_start_index:], start=content_start_index):
-        if arg.startswith("#"):
-            tag = (
-                arg.lstrip("#, ").rstrip(", ").replace("#", "")
-            )  # видаляємо # і зайві пробіли
-            tags.append(tag)
-            content = " ".join(args[content_start_index:i])
 
-    # content = " ".join(args[content_start_index:args.index(f"--tags={+tags[0]}") if tags else len(args)])
-    new_note = Note(title, content, tags)
-    notes.data[title] = new_note
-    return f"Note 'Title: {title} Content:{content} Tags:{', '.join(tags)}' added."
+    # теги в аргументах
+    content_words = []
+    for arg in args[content_start_index:]:
+        if arg.startswith("#"):
+            tags.append(arg)
+        else:
+            content_words.append(arg)
+
+    content = " ".join(content_words)
+
+    return notes.add_note(title, content, tags)
+    # print({get_record_or_error(args[0], notes)})
+    # notes.data[title] = new_note
+    # return f"Note 'Title: {title} Content:{content} Tags: {', '.join(tags)}' added."
 
 
 @user_error
@@ -250,7 +269,6 @@ def edit_note(title, new_content):
         return f"Note '{title}' changed. New content: '{new_content}'"
     else:
         return f"Нотатка '{title}' не знайдена."
-
 
 
 @user_error
@@ -266,18 +284,60 @@ def search_notes(keyword, notes):
         return "No matching notes found."
 
 
-
 @user_error
 def delete_note(*args):
     title = args[0]
-    if title in notes.notes:
-        del notes.notes[title]
-        return f"Note '{title}' deleted."
-    else:
-        return f"Note '{title}' not found."
+    # notes.delete_note(title)
+    return notes.delete_note(title)
+    # return f"Note '{title}' deleted."
+    # if title in notes.data:
+    #     del notes.notes[title]
+    #     return f"Note '{title}' deleted."
+    # else:
 
 
-# --- Notes
+def add_content(*args):  # воно ж change_content
+    ...
+
+
+def del_content(*args):  # а воно треба??? - а нащо лишати заголовок, тег без опису?
+    ...
+
+
+@user_error
+def change_tag(*args):
+    search_title = args[0]
+    search_tag = args[1]
+    new_tag = args[2]
+    return notes.change_tags(search_title, search_tag, new_tag)
+    # if search_tag == new_tag:
+    #     return f"{RED}you are trying to change Tag {search_tag} on same tag {new_tag}{RESET}"
+    # for title, note in notes.items():
+    #     if search_title == title:
+    #         if search_tag in note.tags:
+    #             note.tags[search_tag] = new_tag
+    #             return f"Tag {search_tag} has been successfully changed to {new_tag} for Note {search_title}"
+    #         else:
+    #             return f"{RED}Tag {search_tag} is not among the Note tags of {search_title}{RESET}"
+    # return f"{RED}Note {search_title} not found{RESET}"
+
+
+@user_error
+def delete_tag(*args):
+    search_title = args[0]
+    search_tag = args[1]
+    return notes.delete_tags(search_title, search_tag)
+    # for title, note in notes.items():
+    #     if search_title == title:
+    #         if search_tag in note.tags:
+    #             note.tags.remove(search_tag)
+    #             return f"Tag {search_tag} has been successfully changed from Note {search_title}"
+    #         else:
+    #             return f"{RED}Tag {search_tag} is not among the Note tags of {search_title}{RESET}"
+    # return f"{RED}Note {search_title} not found{RESET}"
+
+
+# --- Notes end
 
 
 def search(*args):
@@ -321,6 +381,7 @@ def show_all(*args):
             input(f"  Press Enter for next page: ")
     return "  --- End of List ---"
 
+
 @user_error
 def show_notes(*args):
     pages = int(args[0]) if args else len(notes.data)
@@ -330,156 +391,87 @@ def show_notes(*args):
         for item in _:
             print(item)
             count += 1
-        if count < len(book):
+        if count < len(notes):
             input(f"  Press Enter for next page: ")
     return "  --- End of List ---"
 
-def add(*args):
+
+def help_part(*args):
     help_list = []
-    help_list.append(
-        f"\t{YELLOW}add_contact {CYAN}<name> <phone>{GRAY}*n {CYAN}<birthday>  {RESET} - add a new contact with a phone number(s) and birthday(optional)"
-    )
-    help_list.append(
-        f"\t{GRAY}                                                (you can enter several phone numbers for a contact){RESET}"
-    )
-    help_list.append(
-        f"\t{YELLOW}add_phone {CYAN}<name> <new_phone>{GRAY}*n           {RESET} - add the new phone number for an existing contact"
-    )
-    help_list.append(
-        f"\t{GRAY}                                                (you can enter several phone numbers for a contact){RESET}"
-    )
-    help_list.append(
-        f'\t{YELLOW}add_bd {CYAN}<name> <birthday>                 {RESET} - add the birthday data ("dd-mm-yyyy") for an existing contact'
-    )
-    help_list.append(
-        f"\t{YELLOW}add_email {CYAN}<name> <email>                 {RESET} - add the e-mail for an existing contact"
-    )
-    help_list.append(
-        f"\t{YELLOW}add_address {CYAN}<name> <address>             {RESET} - add the address for an existing contact"
-    )
-    help_list.append(
-        f'\t{YELLOW}add_note {CYAN}<title> <note>                 {RESET} - add a new note'
-    )
-    help_list.append(
-        f'\t{YELLOW}add_tag {CYAN}<title> <tags>                 {RESET} - add tags to a note'
-    )
-
+    for i in args[0]:
+        help_list.append(HELP_LIST[i])
     return "\n".join(help_list)
 
 
-def change(*args):
-    help_list = []
-    help_list.append(
-        f"\t{YELLOW}change_name {CYAN}<name> <new_name>            {RESET} - change the name for an existing contact"
-    )
-    help_list.append(
-        f"\t{YELLOW}change_phone {CYAN}<name> <phone> <new_phone>  {RESET} - change the phone number for an existing contact"
-    )
-    help_list.append(
-        f"\t{YELLOW}change_bd {CYAN}<name> <new_birthday>          {RESET} - change the phone number for an existing contact"
-    )
-    help_list.append(
-        f"\t{YELLOW}change_email {CYAN}<name> <email> <new_email>  {RESET} - change the email for an existing contact"
-    )
-    help_list.append(
-        f"\t{YELLOW}change_address {CYAN}<name> <new_address>      {RESET} - change the address for an existing contact"
-    )
-    help_list.append(
-        f"\t{YELLOW}change_note {CYAN}<name> <note>          {RESET} - change the note content for an existing contact"
-    )
-    return "\n".join(help_list)
+# ===== helps =====
+def help_page(*_):
+    return help_part(range(len(HELP_LIST)))
 
 
-def delete(*args):
-    help_list = [TITLE]
-    help_list.append(
-        f"\t{YELLOW}delete_phone {CYAN}<name> <phone>              {RESET} - delete one phone number from an existing contact"
-    )
-    help_list.append(
-        f"\t{YELLOW}delete_record {CYAN}<name>                    {RESET} - remove an existing contact"
-    )
-    help_list.append(
-        f"\t{YELLOW}delete_email {CYAN}<name> <email>              {RESET} - remove an email from existing contact"
-    )
-    help_list.append(
-        f"\t{YELLOW}delete_address {CYAN}<name>                    {RESET} - remove an address from listexisting contact"
-    )
-    help_list.append(
-        f"\t{YELLOW}delete_note {CYAN}<name> <phone>            {RESET} - remove an existing contact"
-    )
-    return "\n".join(help_list)
+def add(*_):
+    return help_part(HELP_LIST_ADD)
 
 
-def help_page(*args):
-    help_list = [TITLE]
-    help_list.append(
-        f"\t{YELLOW}add_contact {CYAN}<name> <phone>{GRAY}*n {CYAN}<birthday>  {RESET} - add a new contact with a phone number(s) and birthday(optional)"
-    )
-    help_list.append(
-        f"\t{GRAY}                                                (you can enter several phone numbers for a contact){RESET}"
-    )
-    help_list.append(
-        f"\t{YELLOW}add_phone {CYAN}<name> <new_phone>{GRAY}*n           {RESET} - add the new phone number for an existing contact"
-    )
-    help_list.append(
-        f"\t{GRAY}                                                (you can enter several phone numbers for a contact){RESET}"
-    )
-    help_list.append(
-        f'\t{YELLOW}add_bd {CYAN}<name> <birthday>                 {RESET} - add the birthday data ("dd-mm-yyyy") for an existing contact'
-    )
-    help_list.append(
-        f"\t{YELLOW}change_name {CYAN}<name> <new_name>            {RESET} - change the name for an existing contact"
-    )
-    help_list.append(
-        f"\t{YELLOW}change_phone {CYAN}<name> <phone> <new_phone>  {RESET} - change the phone number for an existing contact"
-    )
-    help_list.append(
-        f"\t{YELLOW}change_bd {CYAN}<name> <new_birthday>          {RESET} - change the phone number for an existing contact"
-    )
-    help_list.append(
-        f"\t{YELLOW}delete_phone {CYAN}<name> <phone>              {RESET} - delete one phone number from an existing contact"
-    )
-    help_list.append(
-        f"\t{YELLOW}delete_contact {CYAN}<name>                    {RESET} - remove an existing contact"
-    )
-    help_list.append(
-        f"\t{YELLOW}find {CYAN}<anything>                          {RESET} - search for any string (>= 3 characters) in the contact data"
-    )
-    help_list.append(
-        f"\t{YELLOW}birthdays {CYAN}<days>                          {RESET} - shows a list of contacts after a certain number of days"
-    )
-    help_list.append(
-        f"\t{YELLOW}name {CYAN}<name>                              {RESET} - search record by the name"
-    )
-    help_list.append(
-        f"\t{YELLOW}list {GRAY}<pages>                             {RESET} - show all contacts, {GRAY}<pages>(optional) - lines per page{RESET}"
-    )
-    help_list.append(
-        f"\t{YELLOW}list_notes {GRAY}<pages>                      {RESET} - show all notes, {GRAY}<pages>(optional) - lines per page{RESET}"
-    )
-    help_list.append(
-        f'\t{YELLOW}hello                                    {RESET} - "hello-string"'
-    )
-    help_list.append(
-        f"\t{YELLOW}exit                                     {RESET} - exit from PhoneBook"
-    )
-    help_list.append(
-        f"\t{YELLOW}help                                     {RESET} - this help-page"
-    )
-    return "\n".join(help_list)
+def change(*_):
+    return help_part(HELP_LIST_EDIT)
 
 
-def say_hello(*args):
-    return "How can I help you?"
+def delete(*_):
+    return help_part(HELP_LIST_DEL)
 
 
-def say_good_bay(*args):
+def contact(*_):
+    return help_part(HELP_LIST_CONTACT)
+
+
+def phone(*_):
+    return help_part(HELP_LIST_PHONE)
+
+
+def note(*_):
+    return help_part(HELP_LIST_NOTE)
+
+
+def find(*_):
+    return help_part(HELP_LIST_FIND)
+
+
+# ===== helps =====
+
+
+def say_hello(*_):
+    return (
+        BLUE + TITLE + RESET + "\t\tType 'help' for information\n   How can I help you?"
+    )
+
+
+def say_good_bay(*_):
     print(book.write_contacts_to_file(FILENAME))
     exit("Good bye!")
 
 
-def unknown(*args):
+def unknown(*_):
     return f"{RED}Unknown command. Try again{RESET}"
+
+
+# from datetime import datetime
+
+
+def birthday(days=0):
+    list_birthday = []
+    result = f'  === Contacts whose birthday is {"in the next "+str(days)+" days" if days else "today"} ===\n'
+    for item in book:
+        rec = get_record_or_error(item, book)
+        if rec.birthday:
+            if int(rec.days_to_birthday(rec.birthday)[0]) <= int(days):
+                list_birthday.append(rec)
+    if len(list_birthday) == 0:
+        return f'{RED}there are no contacts whose birthday is {"in the next "+str(days)+" days" if days else "today"}{RESET}'
+
+    for rec in list_birthday:
+        result += str(rec) + "\n"
+    result += "  --- End of List --- "
+    return result
 
 
 # =============================================
@@ -488,16 +480,17 @@ def unknown(*args):
 
 
 COMMANDS = {
-    add: ("add", "+"),
+    add: ("add",),
     add_contact: ("add_record", "add_contact"),
-    add_phones: ("add_phone", "phone_add"),
+    add_phones: ("add_phone", "add_phones"),
     add_birthday: ("add_birthday", "add_bd", "change_birthday", "change_bd"),
     add_address: ("add_address", "add_adr", "change_address", "change_adr"),
     add_email: ("add_email", "email_add"),
     add_note: ("add_note", "note_add"),
     add_tag: ("add_tag", "tag_add"),
+    change_tag: ("change_tag", "tag_change"),
     change: ("change", "edit"),
-    change_name: ("change_name", "name_change"),
+    change_name: ("change_name", "name_change", "edit_name"),
     change_phone: ("change_phone", "phone_change", "edit_phone"),
     change_address: ("change_address", "change_adr", "edit_address", "edit_adr"),
     change_email: ("change_email", "email_change"),
@@ -506,16 +499,22 @@ COMMANDS = {
     del_phone: ("del_phone", "delete_phone"),
     delete_record: ("delete_contact", "del_contact", "delete_record", "del_record"),
     del_address: ("delete_address", "delete_adr", "del_adr"),
+    delete_tag: ("delete_tag", "tag_delete"),
     del_email: ("delete_email", "del_email"),
     delete_note: ("delete_note", "del_note"),
     name_find: ("name", "find_name"),
-    get_birthdays_on_date: ("birthdays", "find_birthdays", "bd"),
-    search: ("search", "seek", "find"),
+    birthday: ("birthdays", "birthday", "find_birthdays", "bd"),
+    search: ("search", "seek", "find_any"),
     help_page: ("help",),
     say_hello: ("hello", "hi"),
     show_all: ("show_all", "show", "list"),
-    show_notes: ("show_notes", "show_note", "list_notes),"),
+    show_notes: ("show_notes", "show_note", "list_notes"),
     say_good_bay: ("exit", "good_bay", "by", "close", "end"),
+    contact: ("contact",),
+    phone: ("phone",),
+    note: ("note",),
+    find: ("find",),
+    sorting: ("sorting", "sort_path"),
 }
 
 
@@ -530,70 +529,56 @@ def parser(text: str):
     return unknown, []
 
 
-from prompt_toolkit.completion import NestedCompleter
-
-# from terminal_tips import completer
-from prompt_toolkit import prompt
-
-# COMMANDS = dict(sorted(COMMANDS.keys(), reverse=True))
-
-
-def func_completer(CMD: dict):
+def func_completer(CMD):
     comp_dict = {}
-    # print(f"{CMD.values() = }")
-    # sorted_command = sorted(CMD.keys())
+    # sorted_command = []
+    # for i in CMD.values():
+    #     for k in i:
+    #         sorted_command.append(k)
     sorted_command = [
-        "add_address",
+        # 'add_record',
         "add_contact",
+        "add_phone",
+        "add_phones",
         "add_birthday",
-        "add_contact",
+        "change_birthday",
+        "add_address",
+        "change_address",
         "add_email",
         "add_note",
-        "add_phones",
         "add_tag",
         "change_name",
         "change_phone",
-        "change_address",
-        "change_email",
-        "change_note",
-        "del_phone",
-        "delete_record",
-        "del_address",
-        "del_email",
-        "delete_note",
         "edit_name",
         "edit_phone",
+        "change_address",
         "edit_address",
-        "edit_email",
+        "change_email",
+        "change_note",
         "edit_note",
-        "get_birthdays_on_date",
-        "help",
+        "delete_phone",
+        "delete_contact",
+        "delete_record",
+        "delete_address",
+        "delete_email",
+        "delete_note",
+        "delete_tag",
         "find_name",
+        "birthdays",
         "search",
-        "hello",
-        "show_all",
-        "show_notes",
+        "find_any",
+        "help",
+        "show",
         "list",
-        "good_bay",
-        "by",
+        "show_notes",
+        "list_notes",
+        "exit",
+        "close",
+        "sort_path",
     ]
-    for key in sorted_command[1:]:
-        matching_key = next(
-            (
-                existing_key
-                for existing_key in comp_dict.keys()
-                if key.startswith(existing_key)
-            ),
-            None,
-        )
-        if matching_key is None:
-            comp_dict[key] = None
-        else:
-            key_suffix = key[len(matching_key) :].strip()
-            if comp_dict[matching_key] is None:
-                comp_dict[matching_key] = {key_suffix}
-            else:
-                comp_dict[matching_key].add(key_suffix)
+    for i in sorted_command:
+        # print(f"'{i}',")
+        comp_dict.update({i: None})
     return comp_dict
 
 
@@ -605,7 +590,7 @@ def main():
     global notes
     book = book.read_contacts_from_file(FILENAME)
     notes = notes.read_notes_from_file(NOTE_FILENAME)
-    print("\n" + BLUE + TITLE + RESET + "\t\tType 'help' for information")
+    print(say_hello())
     while True:
         user_input = prompt(">>>", completer=completer)
         # user_input = input(f"{BLUE}>>{YELLOW}>>{RESET}")
