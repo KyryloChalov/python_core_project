@@ -224,7 +224,7 @@ def name_find(*args):
 def add_tag(*args):
     title = args[0]
     new_tags = args[1:]
-    print(f"func: {title = } {new_tags = }")
+    # print(f"func: {title = } {new_tags = }")
     return notes.add_tags(title, new_tags)
 
 

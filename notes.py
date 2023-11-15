@@ -76,7 +76,7 @@ class Note:
             # for i in self.tags:
             for item in self.tags:
                 tags_str = ", ".join(item)
-            print(f"{tags_str = }")
+            # print(f"{tags_str = }")
         return f"{GRAY}•{RESET}{blanks}{CYAN}{self.title}{RESET}  {GRAY}: {RESET}{self.content} \t{MAGENTA}{tags_str}{RESET}"
 
 
