@@ -1,12 +1,12 @@
-TITLE = "\t\t\tPersonal Assistant\tteam K-9 project"
+TITLE = f"\t\t\tPersonal Assistant\t\033[33mteam K-9 project"
 FILENAME = "addressbook.bin"
 NOTE_FILENAME = "notes.bin"
 
 BLACK = "\033[30m"
 RED = "\033[31m"
 GREEN = "\033[32m"
-YELLOW = "\033[33m"
 BLUE = "\033[34m"
+YELLOW = "\033[33m"
 MAGENTA = "\033[35m"
 CYAN = "\033[36m"
 WHITE = "\033[37m"
@@ -27,7 +27,7 @@ HELP_LIST = [
     f"\t{YELLOW}add_note {CYAN}<title> <content> <#tag>        {RESET} - add the new note. The title cannot contain spaces.",
     f"\t{GRAY}                                                (if you need several words in the title, use `_` or `-` between words)",
     f"\t{YELLOW}add_tag {CYAN}<title> <#tag>                   {RESET} - add the #tag for an existing note",
-    #10
+    # 10
     f"\t{YELLOW}change_name {CYAN}<name> <new_name>            {RESET} - change the name for an existing contact",
     f"\t{YELLOW}change_phone {CYAN}<name> <phone> <new_phone>  {RESET} - change the phone number for an existing contact",
     f"\t{YELLOW}change_bd {CYAN}<name> <new_birthday>          {RESET} - change the birthday data for an existing contact",
@@ -35,14 +35,14 @@ HELP_LIST = [
     f"\t{YELLOW}change_email {CYAN}<name> <email> <new_email>  {RESET} - change the phone number for an existing contact",
     f"\t{YELLOW}change_note {CYAN}<title> <new_content>        {RESET} - change the existing note",
     f"\t{YELLOW}change_tag {CYAN}<title> <#tag> <#new_tag>     {RESET} - change #tag in existing note",
-    #17
+    # 17
     f"\t{YELLOW}delete_contact {CYAN}<name>                    {RESET} - remove an existing contact",
     f"\t{YELLOW}delete_phone {CYAN}<name> <phone>              {RESET} - delete one phone number from an existing contact",
     f"\t{YELLOW}delete_address {CYAN}<name>                    {RESET} - delete address from an existing contact",
     f"\t{YELLOW}delete_email {CYAN}<name> <email>              {RESET} - delete one e-mail from an existing contact",
     f"\t{YELLOW}delete_note {CYAN}<title>                      {RESET} - delete an existing note",
     f"\t{YELLOW}delete_tag {CYAN}<title> <#tag>                {RESET} - delete one #tag from an existing note",
-    #23
+    # 23
     f"\t{YELLOW}search {CYAN}<anything>                        {RESET} - search for any string (>= 3 characters) in the contact data",
     f"\t{YELLOW}name {CYAN}<name>                              {RESET} - search record by the name",
     f"\t{YELLOW}birthdays {CYAN}<days>                         {RESET} - a list of contacts who have a birthday within {GRAY}<days>{RESET} days",
@@ -51,7 +51,7 @@ HELP_LIST = [
     f"\t{YELLOW}sort_path {CYAN}<path>                         {RESET} - sort files by in the folders",
     f"\t{YELLOW}exit                                     {RESET} - exit from PhoneBook",
     f"\t{YELLOW}help                                     {RESET} - this help-page",
-    #31
+    # 31
 ]
 
 HELP_LIST_ADD = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
