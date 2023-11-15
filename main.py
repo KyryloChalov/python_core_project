@@ -368,7 +368,7 @@ def search(*args):
     else:
         return f"{RED}nothing was found for your request '{seek}'{RESET}"
 
-
+@user_error
 def show_all(*args):
     pages = int(args[0]) if args else len(book.data)
     print(f"  === Address book ===")
@@ -382,6 +382,7 @@ def show_all(*args):
     return "  --- End of List ---"
 
 
+@user_error
 def show_notes(*args):
     pages = int(args[0]) if args else len(notes.data)
     print(f"  === Notes ===")
