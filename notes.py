@@ -99,8 +99,8 @@ class Note:
         # print(f"{self.tags = }")
         if self.tags:
             tags_str = self.tags
-            # for item in self.tags:
-            #     tags_str = ", ".join(item)
+            # print(f"{self.tags = }")
+            tags_str = ", ".join(self.tags)
             # print(f"{tags_str = }")
         return f"{GRAY}•{RESET}{blanks}{CYAN}{self.title}{RESET}  {GRAY}: {RESET}{self.content} \t{MAGENTA}{tags_str}{RESET}"
 
@@ -125,13 +125,15 @@ class NotesBook(UserDict):
         new_note = Note(title, content, tags if tags else None)
         self.data[title] = new_note
         # self.data[new_note.name.value] = new_note
-        return f"Note '{title}' has been successfully added.\n\t{self}"
+        return f"Note '{title}' has been successfully added.\n\t{self.data[title]}"
+
     def edit_note(self, title, new_content):
         if title in self.data:
             self.data[title] = new_content
-            return f"Note '{title}' edited."
+            return f"Note '{title}' edited.\n\t{self.data[title]}"
         else:
             return f"Note '{title}' not found."
+
     def delete_note(self, title):
         if title in self.data:
             del self.data[title]
@@ -142,30 +144,28 @@ class NotesBook(UserDict):
     def add_tags(self, title, tags):  # метод для додавання тегів
         if title in self.data:
             self.data[title].tags.add_tags(tags)
-            return f"Tags {', '.join(tags)} added to the note with title '{title}'."
+            return f"Tags {', '.join(tags)} added to the note with title '{title}'.\n\t{self.data[title]}"
         else:
             raise NoteError(f"Note with title '{title}' not found.")
 
     def change_tags(self, title, old_tag, new_tag):
         if title in self.data:
             self.data[title].tags.change_tag(old_tag, new_tag)
-            return f"Tag {old_tag} has been successfully changed to {new_tag} for title '{title}'."
+            return f"Tag {old_tag} has been successfully changed to {new_tag} for title '{title}'.\n\t{self.data[title]}"
         else:
             raise NoteError(f"Note with title '{title}' not found.")
 
     def delete_tags(self, title, tag):
         if title in self.data:
             self.data[title].tags.delete_tag(tag)
-            return f"Tag {tag} has been successfully deleted for title '{title}'."
+            return f"Tag {tag} has been successfully deleted for title '{title}'.\n\t{self.data[title]}"
         else:
-            raise NoteError(f"Note with title '{title}' not found.")             
+            raise NoteError(f"Note with title '{title}' not found.")
 
     # def add_note(self, title, content, tags):
     #     new_note = Note(title, content, tags if tags else None)
     #     self.data[title] = new_note
     #     # self.data[new_note.name.value] = new_note
-
-
 
     # def add_note(self, title, content, tags):
     #     # print(f"NotesBook.add_note tags = {tags}")
