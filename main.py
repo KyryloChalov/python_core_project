@@ -223,7 +223,7 @@ def name_find(*args):
 @user_error
 def add_tag(*args):
     title = args[0]
-    tags = args[1:]
+    tags = list(args[1:])
     return notes.add_tags(title, tags)
 
 
@@ -307,29 +307,13 @@ def change_tag(*args):
     search_title = args[0]
     search_tag = args[1]
     new_tag = args[2]
-    if search_tag == new_tag:
-        return f"{RED}you are trying to change Tag {search_tag} on same tag {new_tag}{RESET}"
-    for title, note in notes.items():
-        if search_title == title:
-            if search_tag in note.tags:
-                note.tags[search_tag] = new_tag
-                return f"Tag {search_tag} has been successfully changed to {new_tag} for Note {search_title}"
-            else:
-                return f"{RED}Tag {search_tag} is not among the Note tags of {search_title}{RESET}"
-    return f"{RED}Note {search_title} not found{RESET}"
+    return notes.change_tags(search_title, search_tag, new_tag)
 
-
+@user_error
 def delete_tag(*args):
     search_title = args[0]
     search_tag = args[1]
-    for title, note in notes.items():
-        if search_title == title:
-            if search_tag in note.tags:
-                note.tags.remove(search_tag)
-                return f"Tag {search_tag} has been successfully changed from Note {search_title}"
-            else:
-                return f"{RED}Tag {search_tag} is not among the Note tags of {search_title}{RESET}"
-    return f"{RED}Note {search_title} not found{RESET}"
+    return notes.delete_tags(search_title, search_tag)
 
 
 # --- Notes

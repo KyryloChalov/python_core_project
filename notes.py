@@ -30,8 +30,26 @@ class Tags(Field):
         super().__init__(tags or [])
 
     def add_tags(self, new_tags):
-        self.value.extend(new_tags)
-        # self.value += new_tags
+        if not self.value:
+            self.value = new_tags
+        new_list = list(self.value)
+        self.value = new_list + new_tags
+
+
+    def change_tag(self, old_tag, new_tag):
+        if not old_tag in self.value:
+            return (f"Tag {old_tag} not in Tag list")
+        old_list_tag = []
+        for o_t in self.value:
+            old_list_tag.append(o_t)
+        old_list_tag[old_list_tag.index(old_tag)] = new_tag
+        self.value = old_list_tag
+
+    def delete_tag(self, tag):
+        if not tag in self.value:
+            return (f"Tag {tag} not in Tag list")
+        self.value.remove(tag)
+
 
     def __iter__(self):
         return iter(self.value)
@@ -41,7 +59,7 @@ class Note:
     def __init__(self, title, content, tags=None):
         self.title = Title(title)
         self.content = Content(content)
-        self.tags = Tags(tags)
+        self.tags = Tags(tags) if tags else []
 
     # def add_note(self, title, content):
     #     self.notes[title] = content
@@ -67,8 +85,9 @@ class Note:
         tags_str = ""
         # print(f"{self.tags = }")
         if self.tags:
-            for item in self.tags:
-                tags_str = ", ".join(item)
+            tags_str = self.tags
+            # for item in self.tags:
+            #     tags_str = ", ".join(item)
             # print(f"{tags_str = }")
         return f"{GRAY}•{RESET}{blanks}{CYAN}{self.title}{RESET}  {GRAY}: {RESET}{self.content} \t{MAGENTA}{tags_str}{RESET}"
 
@@ -77,7 +96,7 @@ class NotesBook(UserDict):
     def __init__(self):
         super().__init__()
 
-    def add_note(self, title, content, *tags):
+    def add_note(self, title, content, tags):
         new_note = Note(title, content, tags if tags else None)
         self.data[title] = new_note
         # self.data[new_note.name.value] = new_note
@@ -99,10 +118,24 @@ class NotesBook(UserDict):
 
     def add_tags(self, title, tags):  # метод для додавання тегів
         if title in self.data:
-            self.data[title].tags.extend(tags)
+            self.data[title].tags.add_tags(tags)
             return f"Tags {', '.join(tags)} added to the note with title '{title}'."
         else:
             raise NoteError(f"Note with title '{title}' not found.")
+        
+    def change_tags(self, title, old_tag, new_tag):
+        if title in self.data:
+            self.data[title].tags.change_tag(old_tag, new_tag)
+            return f"Tag {old_tag} has been successfully changed to {new_tag} for title '{title}'."
+        else:
+            raise NoteError(f"Note with title '{title}' not found.")
+
+    def delete_tags(self, title, tag):
+        if title in self.data:
+            self.data[title].tags.delete_tag(tag)
+            return f"Tag {tag} has been successfully deleted for title '{title}'."
+        else:
+            raise NoteError(f"Note with title '{title}' not found.")             
 
     def search_notes_by_tag(self, tag):
         matching_notes = []
