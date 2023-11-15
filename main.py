@@ -340,6 +340,7 @@ def delete_tag(*args):
 # --- Notes end
 
 
+@user_error
 def search(*args):
     result = ""
     if not args:
@@ -367,6 +368,7 @@ def search(*args):
         return f"data found for your request '{seek}': \n{result[:-1]}"
     else:
         return f"{RED}nothing was found for your request '{seek}'{RESET}"
+
 
 @user_error
 def show_all(*args):
