@@ -29,9 +29,29 @@ class Tags(Field):
     def __init__(self, tags=None):
         super().__init__(tags or [])
 
-    def extend(self, new_tag):
-        # super()
-        ...
+    def add_tags(self, new_tags):
+        if not self.value:
+            self.value = new_tags
+        new_list = list(self.value)
+        self.value = new_list + new_tags
+
+    def change_tag(self, old_tag, new_tag):
+        if not old_tag in self.value:
+            return f"Tag {old_tag} not in Tag list"
+        old_list_tag = []
+        for o_t in self.value:
+            old_list_tag.append(o_t)
+        old_list_tag[old_list_tag.index(old_tag)] = new_tag
+        self.value = old_list_tag
+
+    def delete_tag(self, tag):
+        if not tag in self.value:
+            return f"Tag {tag} not in Tag list"
+        self.value.remove(tag)
+
+    # def extend(self, new_tag):
+    #     # super()
+    #     ...
 
     # def add_tags(self, new_tags):
     #     self.value.extend(new_tags)
@@ -42,12 +62,17 @@ class Tags(Field):
 
 
 class Note:
-    def __init__(
-        self, title: Title, content: Content | None = None, tags: Tags | None = None
-    ) -> None:
+    def __init__(self, title, content, tags=None):
         self.title = Title(title)
-        self.content = Content(content) if content else ""
-        self.tags = [Tags(tags)] if tags else []
+        self.content = Content(content)
+        self.tags = Tags(tags) if tags else []
+
+    # def __init__(
+    #     self, title: Title, content: Content | None = None, tags: Tags | None = None
+    # ) -> None:
+    #     self.title = Title(title)
+    #     self.content = Content(content) if content else ""
+    #     self.tags = [Tags(tags)] if tags else []
 
     # def add_note(self, title, content):
     #     self.notes[title] = content
@@ -73,11 +98,23 @@ class Note:
         tags_str = ""
         # print(f"{self.tags = }")
         if self.tags:
-            # for i in self.tags:
-            for item in self.tags:
-                tags_str = ", ".join(item)
+            tags_str = self.tags
+            # for item in self.tags:
+            #     tags_str = ", ".join(item)
             # print(f"{tags_str = }")
         return f"{GRAY}•{RESET}{blanks}{CYAN}{self.title}{RESET}  {GRAY}: {RESET}{self.content} \t{MAGENTA}{tags_str}{RESET}"
+
+    # def __str__(self) -> str:
+    #     blanks = " " * (LEN_OF_NAME_FIELD - len(str(self.title)))
+    #     # tags_str = f"Tags {''.join(t for t in self.tags)}" if len(self.tags)>0 else ""
+    #     tags_str = ""
+    #     # print(f"{self.tags = }")
+    #     if self.tags:
+    #         # for i in self.tags:
+    #         for item in self.tags:
+    #             tags_str = ", ".join(item)
+    #         # print(f"{tags_str = }")
+    #     return f"{GRAY}•{RESET}{blanks}{CYAN}{self.title}{RESET}  {GRAY}: {RESET}{self.content} \t{MAGENTA}{tags_str}{RESET}"
 
 
 class NotesBook(UserDict):
@@ -85,19 +122,16 @@ class NotesBook(UserDict):
         super().__init__()
 
     def add_note(self, title, content, tags):
-        # print(f"NotesBook.add_note tags = {tags}")
         new_note = Note(title, content, tags if tags else None)
         self.data[title] = new_note
         # self.data[new_note.name.value] = new_note
-        return f"Note '{title}' has been successfully added.\n\t{new_note}"
-
+        return f"Note '{title}' has been successfully added.\n\t{self}"
     def edit_note(self, title, new_content):
         if title in self.data:
             self.data[title] = new_content
             return f"Note '{title}' edited."
         else:
             return f"Note '{title}' not found."
-
     def delete_note(self, title):
         if title in self.data:
             del self.data[title]
@@ -105,39 +139,88 @@ class NotesBook(UserDict):
         else:
             return f"Note '{title}' not found."
 
-    def add_tags(self, title, new_tags):  # метод для додавання тегів
-        ... 
-        # print(f"1. {     new_tags = } {     title = }")
-        # lst = []
-        # # self.title = Title(title)
-        # # self.tags = Tags(tags)
-        # # print(f"2. {self.tags = } {self.title = }")
-        # if title in self.data:
-        #     print(f"3.{      new_tags = } {     title = }")
-        #     print(f"before {self.data[title].tags = }")
-        #     for i in self.data[title].tags:
-        #         print(f"{i = }")
-        #         # i.extend(new_tags)
-        #         # i += new_tags
-        #         print(f"{i = }")
-        #         for k in i:
-        #             print(f"{k = }")
-        #             lst.append(k)
-                
-        #         print(f"{lst = }")
-        #         # lst.append(new_tags[0])
-        #         print(f"{lst = }")
-                
-        #         self.data[title].tags = lst 
-        #     print(f"after {self.data[title].tags = }")
-        #     self.data[title].tags.extend(new_tags)
-        #     # print(self.data[title].tags)
-        #     # self.data[title].tags = Tags([tags])
-        #     print(f"after after {self.data[title].tags = }")
-        #     print(f"{self.data = }")
-        #     return f"Tags {', '.join(new_tags)} added to the note with title '{title}'."
-        # else:
-        #     raise NoteError(f"Note with title '{title}' not found.")
+    def add_tags(self, title, tags):  # метод для додавання тегів
+        if title in self.data:
+            self.data[title].tags.add_tags(tags)
+            return f"Tags {', '.join(tags)} added to the note with title '{title}'."
+        else:
+            raise NoteError(f"Note with title '{title}' not found.")
+
+    def change_tags(self, title, old_tag, new_tag):
+        if title in self.data:
+            self.data[title].tags.change_tag(old_tag, new_tag)
+            return f"Tag {old_tag} has been successfully changed to {new_tag} for title '{title}'."
+        else:
+            raise NoteError(f"Note with title '{title}' not found.")
+
+    def delete_tags(self, title, tag):
+        if title in self.data:
+            self.data[title].tags.delete_tag(tag)
+            return f"Tag {tag} has been successfully deleted for title '{title}'."
+        else:
+            raise NoteError(f"Note with title '{title}' not found.")             
+
+    # def add_note(self, title, content, tags):
+    #     new_note = Note(title, content, tags if tags else None)
+    #     self.data[title] = new_note
+    #     # self.data[new_note.name.value] = new_note
+
+
+
+    # def add_note(self, title, content, tags):
+    #     # print(f"NotesBook.add_note tags = {tags}")
+    #     new_note = Note(title, content, tags if tags else None)
+    #     self.data[title] = new_note
+    #     # self.data[new_note.name.value] = new_note
+    #     return f"Note '{title}' has been successfully added.\n\t{new_note}"
+
+    # def edit_note(self, title, new_content):
+    #     if title in self.data:
+    #         self.data[title] = new_content
+    #         return f"Note '{title}' edited."
+    #     else:
+    #         return f"Note '{title}' not found."
+
+    # def delete_note(self, title):
+    #     if title in self.data:
+    #         del self.data[title]
+    #         return f"Note '{title}' deleted."
+    #     else:
+    #         return f"Note '{title}' not found."
+
+    # def add_tags(self, title, new_tags):  # метод для додавання тегів
+    #     ...
+    # print(f"1. {     new_tags = } {     title = }")
+    # lst = []
+    # # self.title = Title(title)
+    # # self.tags = Tags(tags)
+    # # print(f"2. {self.tags = } {self.title = }")
+    # if title in self.data:
+    #     print(f"3.{      new_tags = } {     title = }")
+    #     print(f"before {self.data[title].tags = }")
+    #     for i in self.data[title].tags:
+    #         print(f"{i = }")
+    #         # i.extend(new_tags)
+    #         # i += new_tags
+    #         print(f"{i = }")
+    #         for k in i:
+    #             print(f"{k = }")
+    #             lst.append(k)
+
+    #         print(f"{lst = }")
+    #         # lst.append(new_tags[0])
+    #         print(f"{lst = }")
+
+    #         self.data[title].tags = lst
+    #     print(f"after {self.data[title].tags = }")
+    #     self.data[title].tags.extend(new_tags)
+    #     # print(self.data[title].tags)
+    #     # self.data[title].tags = Tags([tags])
+    #     print(f"after after {self.data[title].tags = }")
+    #     print(f"{self.data = }")
+    #     return f"Tags {', '.join(new_tags)} added to the note with title '{title}'."
+    # else:
+    #     raise NoteError(f"Note with title '{title}' not found.")
 
     def search_notes_by_tag(self, tag):
         matching_notes = []
