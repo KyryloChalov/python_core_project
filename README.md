@@ -47,7 +47,7 @@ You can install this program as a Python package via pip. You can install the pa
 After installation, you can run the script with the command:
 
 ```
-chat_bot
+chatbot
 ```
 
 The script has autocomplete functionality, which means that when you enter a command, you can see suggestions with available options. For example, if you type `add_`, you will see `add_contact`, `add_phone`, `add_bd`, etc.
