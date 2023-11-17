@@ -1,5 +1,5 @@
 from collections import UserDict
-from constants import RED, GRAY, CYAN, MAGENTA, RESET, LEN_OF_NAME_FIELD
+from constants import RED, GRAY, CYAN, MAGENTA, RESET, WHITE, LEN_OF_NAME_FIELD
 from datetime import datetime
 import os.path
 import pickle
@@ -54,7 +54,6 @@ class Tags(Field):
 
 
 class Note:
-    
     def __init__(self, title, content, tags=None):
         self.title = Title(title)
         self.content = Content(content)
@@ -74,7 +73,6 @@ class Note:
 
 
 class NotesBook(UserDict):
-    
     def __init__(self):
         super().__init__()
 
@@ -131,14 +129,43 @@ class NotesBook(UserDict):
 
             return "\n".join(sorted_notes)
         else:
-            return "No matching notes found."
+            return f"{RED}nothing was found for your request '{tag}'{RESET}"
 
-    def search_notes(self, keyword):
-        result = []
-        for title, content in self.data.items():
-            if keyword.lower() in title.lower() or keyword.lower() in content.lower():
-                result.append(f"Title: {title}\nContent: {content}\n")
-        return result if result else "No matching notes found."
+    # def search_notes(self, keyword):
+    #     result = []
+    #     for title, content in self.data.items():
+    #         if keyword.lower() in title.lower() or keyword.lower() in content.lower():
+    #             result.append(f"Title: {title}\nContent: {content}\n")
+    #     return result if result else "No matching notes found."
+
+    def search_notes(self, keywords_or_tag):
+        matching_notes = []
+        for title, note in self.data.items():
+            if (
+                (
+                    isinstance(keywords_or_tag, str)
+                    and keywords_or_tag.lower() in title.lower()
+                )
+                or keywords_or_tag.lower() in note.content.lower()
+                or (
+                    isinstance(keywords_or_tag, Tags)
+                    and (
+                        keywords_or_tag.lower() in map(str.lower, note.tags.value)
+                        for tag in keywords_or_tag.value
+                    )
+                )
+            ):
+                matching_notes.append(
+                    f"\t{self.data[title]}"
+                    # f"Note 'Title: {title}' Content: {note.content} Tags:{', '.join(map(str, note.tags.value))}\n\t{self.data[title]}"
+                )
+
+        if matching_notes:
+            sorted_notes = sorted(matching_notes)
+            return "\n".join(sorted_notes)
+        else:
+            return f"{RED}nothing was found for your request '{WHITE}{keywords_or_tag}{RED}'{RESET}"
+
 
     def read_notes_from_file(self, fn):
         if os.path.exists(fn):
