@@ -35,7 +35,6 @@ from constants import (
 
 from notes import NotesBook, NoteError, Title, Content, Tags, Note
 
-from get_birthday_on_date import get_birthdays_on_date
 
 from prompt_toolkit.completion import NestedCompleter
 
@@ -255,9 +254,6 @@ def add_note(*args):
     content = " ".join(content_words)
 
     return notes.add_note(title, content, tags)
-    # print({get_record_or_error(args[0], notes)})
-    # notes.data[title] = new_note
-    # return f"Note 'Title: {title} Content:{content} Tags: {', '.join(tags)}' added."
 
 
 @user_error
@@ -289,18 +285,11 @@ def search_notes(keyword, notes):
 @user_error
 def delete_note(*args):
     title = args[0]
-    # notes.delete_note(title)
     return notes.delete_note(title)
-    # return f"Note '{title}' deleted."
-    # if title in notes.data:
-    #     del notes.notes[title]
-    #     return f"Note '{title}' deleted."
-    # else:
 
 
 def add_content(*args):  # воно ж change_content
     ...
-
 
 def del_content(*args):  # а воно треба??? - а нащо лишати заголовок, тег без опису?
     ...
@@ -312,16 +301,6 @@ def change_tag(*args):
     search_tag = args[1]
     new_tag = args[2]
     return notes.change_tags(search_title, search_tag, new_tag)
-    # if search_tag == new_tag:
-    #     return f"{RED}you are trying to change Tag {search_tag} on same tag {new_tag}{RESET}"
-    # for title, note in notes.items():
-    #     if search_title == title:
-    #         if search_tag in note.tags:
-    #             note.tags[search_tag] = new_tag
-    #             return f"Tag {search_tag} has been successfully changed to {new_tag} for Note {search_title}"
-    #         else:
-    #             return f"{RED}Tag {search_tag} is not among the Note tags of {search_title}{RESET}"
-    # return f"{RED}Note {search_title} not found{RESET}"
 
 
 @user_error
@@ -329,14 +308,6 @@ def delete_tag(*args):
     search_title = args[0]
     search_tag = args[1]
     return notes.delete_tags(search_title, search_tag)
-    # for title, note in notes.items():
-    #     if search_title == title:
-    #         if search_tag in note.tags:
-    #             note.tags.remove(search_tag)
-    #             return f"Tag {search_tag} has been successfully changed from Note {search_title}"
-    #         else:
-    #             return f"{RED}Tag {search_tag} is not among the Note tags of {search_title}{RESET}"
-    # return f"{RED}Note {search_title} not found{RESET}"
 
 
 # --- Notes end
@@ -457,8 +428,6 @@ def say_good_bay(*_):
 def unknown(*_):
     return f"{RED}Unknown command. Try again{RESET}"
 
-
-# from datetime import datetime
 
 
 def birthday(days=0):
@@ -612,7 +581,7 @@ def main():
             help_page,
             search,
             name_find,
-            get_birthdays_on_date,
+            birthday,
         ]:
             book.write_contacts_to_file(FILENAME)
             notes.write_notes_to_file(NOTE_FILENAME)

@@ -49,6 +49,7 @@ HELP_LIST = [
     f"\t{YELLOW}list {GRAY}<pages>                             {RESET} - show all contacts, {GRAY}<pages>(optional) - lines per page{RESET}",
     f"\t{YELLOW}list_notes {GRAY}<pages>                       {RESET} - show all notes, {GRAY}<pages>(optional) - lines per page{RESET}",
     f"\t{YELLOW}sort_path {CYAN}<path>                         {RESET} - sort files by in the folders",
+    # 29
     f"\t{YELLOW}exit                                     {RESET} - exit from PhoneBook",
     f"\t{YELLOW}help                                     {RESET} - this help-page",
     # 31
