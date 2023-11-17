@@ -117,19 +117,19 @@ class NotesBook(UserDict):
         else:
             raise NoteError(f"Note with title '{title}' not found.")
 
-    def search_notes_by_tag(self, tag):
-        matching_notes = []
-        for title, note in self.data.items():
-            if tag.lower().strip() in map(str.lower, note.tags.value):
-                matching_notes.append(
-                    f"Note 'Title: {note.title}' Content: {note.content} Tags:{', '.join(map(str, note.tags.value))}"
-                )
-        if matching_notes:
-            sorted_notes = sorted(matching_notes)
+    # def search_notes_by_tag(self, tag):
+    #     matching_notes = []
+    #     for title, note in self.data.items():
+    #         if tag.lower().strip() in map(str.lower, note.tags.value):
+    #             matching_notes.append(
+    #                 f"Note 'Title: {note.title}' Content: {note.content} Tags:{', '.join(map(str, note.tags.value))}"
+    #             )
+    #     if matching_notes:
+    #         sorted_notes = sorted(matching_notes)
 
-            return "\n".join(sorted_notes)
-        else:
-            return f"{RED}nothing was found for your request '{tag}'{RESET}"
+    #         return "\n".join(sorted_notes)
+    #     else:
+    #         return f"{RED}nothing was found for your request '{tag}'{RESET}"
 
     # def search_notes(self, keyword):
     #     result = []
@@ -147,6 +147,7 @@ class NotesBook(UserDict):
                     and keywords_or_tag.lower() in title.lower()
                 )
                 or keywords_or_tag.lower() in note.content.lower()
+                # тут треба розібратися - пошук за тегами не працює
                 or (
                     isinstance(keywords_or_tag, Tags)
                     and (
