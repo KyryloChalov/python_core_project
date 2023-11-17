@@ -258,8 +258,8 @@ def add_note(*args):
 
 @user_error
 def edit_note(title, *args):
-    # Перевірка наявності тайтлу в 
-    new_content = ' '.join(args) 
+    # Перевірка наявності тайтлу в
+    new_content = " ".join(args)
     print(f"{new_content = }")
     if title in notes.data:
         # Змінюємо тільки content
@@ -269,17 +269,38 @@ def edit_note(title, *args):
         return f"note '{title}' not found."
 
 
+# @user_error
+# def search_notes(keyword, notes):
+#     matching_notes = [
+#         f"Note 'Title: {title}' Content: {note.content} Tags:{', '.join(note.tags)}"
+#         for title, note in notes.items()
+#         if keyword.lower() in title.lower() or keyword.lower() in note.content.lower()
+#     ]
+#     if matching_notes:
+#         return "\n".join(matching_notes)
+#     else:
+#         return "No matching notes found."
+
+
 @user_error
-def search_notes(keyword, notes):
-    matching_notes = [
-        f"Note 'Title: {title}' Content: {note.content} Tags:{', '.join(note.tags)}"
-        for title, note in notes.items()
-        if keyword.lower() in title.lower() or keyword.lower() in note.content.lower()
-    ]
-    if matching_notes:
-        return "\n".join(matching_notes)
+def search_notes(*args):
+    result = ""
+
+    if not args:
+        return f"{RED}searching string is required{RESET}"
+
+    keyword_or_tags = args[0]
+
+    search_result = notes.search_notes(keyword_or_tags)
+
+    if search_result:
+        result += search_result
+
+    if result:
+        return f"{result}"
+        # return f"{result[:-1]}"
     else:
-        return "No matching notes found."
+        return f"{RED}nothing was found for your request '{keyword_or_tags}'{RESET}"
 
 
 @user_error
@@ -291,7 +312,8 @@ def delete_note(*args):
 def add_content(*args):  # воно ж change_content
     ...
 
-def del_content(*args):  # а воно треба??? - а нащо лишати заголовок, тег без опису?
+
+def del_content(*args):  # а воно треба??? - а нащо лишати заголовок, тег без контенту?
     ...
 
 
@@ -429,7 +451,6 @@ def unknown(*_):
     return f"{RED}Unknown command. Try again{RESET}"
 
 
-
 def birthday(days=0):
     list_birthday = []
     result = f'  === Contacts whose birthday is {"in the next "+str(days)+" days" if days else "today"} ===\n'
@@ -453,7 +474,7 @@ def birthday(days=0):
 
 
 COMMANDS = {
-    add: ("add","help_add"),
+    add: ("add", "help_add"),
     add_contact: ("add_record", "add_contact"),
     add_phones: ("add_phone", "add_phones"),
     add_birthday: ("add_birthday", "add_bd", "change_birthday", "change_bd"),
@@ -478,6 +499,7 @@ COMMANDS = {
     name_find: ("name", "find_name"),
     birthday: ("birthdays", "birthday", "find_birthdays", "bd"),
     search: ("search", "seek", "find_any"),
+    search_notes: ("search_notes", "find_notes"),
     help_page: ("help",),
     say_hello: ("hello", "hi"),
     show_all: ("show_all", "show", "list"),
@@ -549,6 +571,7 @@ def func_completer(CMD):
         "list",
         "show_notes",
         "list_notes",
+        "search_notes",
         "exit",
         "close",
         "sort_path",
