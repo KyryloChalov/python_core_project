@@ -82,15 +82,12 @@ class Email(Field):
     @value.setter
     def value(self, email: str):
         new_email = str(email).strip()
-        # extend vemail check
-        # if "@" in new_email and "." in new_email:
         if re.findall(r"[A-z.]+\w+@[A-z]+\.[A-z]{2,}", new_email):
             self.__value = new_email
         else:
             raise EmailError(
                 f"{RED}{new_email} - invalid email, the email must contains only letters, digits, @ and .{RESET}"
             )
-        # self.__value = new_email
 
     def __str__(self) -> str:
         return f"{self.value}" if self.value else ""
