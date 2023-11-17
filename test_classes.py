@@ -1,4 +1,6 @@
 from classes import Record, AddressBook
+
+# from notes import Note, NotesBook
 from constants import GREEN, RESET
 
 # =============================================
@@ -10,12 +12,12 @@ if __name__ == "__main__":
     filename = "book_test_1.bin"
 
     print(GREEN + "     створюємо новий контакт" + RESET)
-    print(book.add_record(Record("tom", "0995648525", birthday="08-11-1986")))
+    print(book.add_record(Record("tom", "0995648525", birthday="18-11-1986")))
 
     print(
         GREEN + "     створюємо новий контакт, у якого тільки день народження" + RESET
     )
-    print(book.add_record(Record("helen", birthday="11-11-1999")))
+    print(book.add_record(Record("helen", birthday="14-11-1999")))
 
     print(GREEN + "     змінюємо ім'я 'tom' на 'thomas'" + RESET)
     print(book.change_name("tom", "thomas"))
@@ -24,7 +26,7 @@ if __name__ == "__main__":
     print(book.add_record(Record("jerry")))
 
     print(GREEN + "     створюємо новий контакт" + RESET)
-    print(book.add_record(Record("garry", "0995647821", birthday="08-12-1975")))
+    print(book.add_record(Record("garry", "0995647821", birthday="15-11-1975")))
 
     print(GREEN + "     створюємо новій контакт в 3 дії" + RESET)
     name = "bill"
@@ -35,7 +37,7 @@ if __name__ == "__main__":
     print(book.add_record(rec))
 
     print(GREEN + "     додаємо дату народження контакту" + RESET)
-    print(rec.add_birthday("10-11-2005"))
+    print(rec.add_birthday("16-11-2005"))
 
     print(GREEN + "     намагаємось додати вже існуючий телефон" + RESET)
     result = rec.add_phone("0677977166")
@@ -75,16 +77,13 @@ if __name__ == "__main__":
     print(book.add_record(Record("ivan", "0671234567")))
 
     print(GREEN + "     додаємо новий контакт" + RESET)
-    print(book.add_record(Record("mary", "0671234555", "9-11-2000")))
+    print(book.add_record(Record("mary", "0671234555", "13-12-2000")))
 
     print(GREEN + "     додаємо новий контакт" + RESET)
-    print(book.add_record(Record("jill", "0672223344", birthday="07-11-2012")))
+    print(book.add_record(Record("jill", "0672223344", birthday="12-11-2012")))
 
     print(GREEN + "     шукаємо контакт" + RESET)
     print(book.find_name("bill"))
-
-    print(GREEN + "     змінюємо ім'я 'bill' на 'billy'" + RESET)
-    print(book.change_name("bill", "billy"))
 
     print(GREEN + "     шукаємо неіснуючий контакт" + RESET)
     print(book.find_name("john"))
@@ -121,6 +120,28 @@ if __name__ == "__main__":
         + RESET
     )
     print("======== after restoring from a file ========")
+
+    print(GREEN + "     перелік контактів" + RESET)
+    print(book)
+
+    print("======== Address fields ========")
+    print(GREEN + "     додаємо адресу" + RESET)
+    print(rec.add_address("Lviv"))
+    print(rec.remove_address())
+    print(rec.add_address("10001, New York, Manhattan 123b"))
+    print(GREEN + "     перелік контактів" + RESET)
+    print(book)
+
+    print("======== Email fields ========")
+    print(GREEN + "     додаємо email" + RESET)
+    # print(rec.add_email("XXXXXXXXXXXXXX"))
+    print(rec.add_email("asd@mail.com"))
+    print(rec.remove_email("asdddd@mail.com"))
+    print(rec.edit_email("asd@mail.com", "new_mail@mail.com"))
+    print(rec.add_email("second@mail.com"))
+
+    print(GREEN + "     змінюємо ім'я 'bill' на 'billy'" + RESET)
+    print(book.change_name("bill", "billy"))
 
     print(GREEN + "     перелік контактів" + RESET)
     print(book)
