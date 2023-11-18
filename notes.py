@@ -33,7 +33,6 @@ class Tags(Field):
         # print(f'tags {self.value = }')
         if not self.value:
             self.value = new_tags
-        
         new_list = list(self.value)
         self.value = new_list + new_tags
 
@@ -70,9 +69,9 @@ class Note:
             # print(f"2. {self.tags = }")
             tags_str = ", ".join(self.tags)
             # print(f"1. {tags_str =}")
-            if len(tags_str) > 0: 
-                    if tags_str[0] == ",":
-                        tags_str = tags_str[2:]
+            if len(tags_str) > 0:
+                if tags_str[0] == ",":
+                    tags_str = tags_str[2:]
             # print(f"2. {tags_str =}")
         return f"{GRAY}•{RESET}{blanks}{CYAN}{self.title}{RESET}  {GRAY}: {RESET}{self.content} \t{MAGENTA}{tags_str}{RESET}"
 
@@ -106,7 +105,6 @@ class NotesBook(UserDict):
         # tags = Tags(tags)
         if title in self.data:
             self.data[title].tags.add_tags(tags)
-            # if self.data[title].tags[0] == "":
             # print(f" tags = {self.data[title].tags}")
             # print(f" {self.data.tags = }")
             return f"Tags {', '.join(tags)} added to the note with title '{title}'.\n\t{self.data[title]}"
@@ -127,57 +125,28 @@ class NotesBook(UserDict):
         else:
             raise NoteError(f"Note with title '{title}' not found.")
 
-    # def search_notes_by_tag(self, tag):
-    #     matching_notes = []
-    #     for title, note in self.data.items():
-    #         if tag.lower().strip() in map(str.lower, note.tags.value):
-    #             matching_notes.append(
-    #                 f"Note 'Title: {note.title}' Content: {note.content} Tags:{', '.join(map(str, note.tags.value))}"
-    #             )
-    #     if matching_notes:
-    #         sorted_notes = sorted(matching_notes)
 
-    #         return "\n".join(sorted_notes)
-    #     else:
-    #         return f"{RED}nothing was found for your request '{tag}'{RESET}"
-
-    # def search_notes(self, keyword):
-    #     result = []
-    #     for title, content in self.data.items():
-    #         if keyword.lower() in title.lower() or keyword.lower() in content.lower():
-    #             result.append(f"Title: {title}\nContent: {content}\n")
-    #     return result if result else "No matching notes found."
-
-    def search_notes(self, keywords_or_tag):
+    def search_notes(self, search_word):
+        search_word = search_word.lower()
         matching_notes = []
         for title, note in self.data.items():
-            print(f"      {keywords_or_tag = }")
-            print(f"{type(keywords_or_tag) = }")
-            if (
-                (
-                    isinstance(keywords_or_tag, str)
-                    and keywords_or_tag.lower() in title.lower()
-                )
-                or keywords_or_tag.lower() in note.content.lower()
-                # тут треба розібратися - пошук за тегами не працює
-                or (
-                    isinstance(keywords_or_tag, Tags)
-                    and (
-                        keywords_or_tag.lower() in map(str.lower, note.tags.value)
-                        for tag in keywords_or_tag.value
-                    )
-                )
+            tags_str = ", ".join(self.data[title].tags)
+            if any(
+                [
+                    search_word in title.lower(),
+                    search_word in note.content.lower(),
+                    search_word in tags_str,
+                ]
             ):
                 matching_notes.append(
                     f"\t{self.data[title]}"
-                    # f"Note 'Title: {title}' Content: {note.content} Tags:{', '.join(map(str, note.tags.value))}\n\t{self.data[title]}"
+                    # f"Note 'Title: {title}' Content: {note.content} Tags:{', '.join(map(str, note.tags.value))}"
                 )
-
         if matching_notes:
             sorted_notes = sorted(matching_notes)
             return "\n".join(sorted_notes)
         else:
-            return f"{RED}nothing was found for your request '{WHITE}{keywords_or_tag}{RED}'{RESET}"
+            return f"{RED}nothing was found for your request '{WHITE}{search_word}{RED}'{RESET}"
 
     def read_notes_from_file(self, fn):
         if os.path.exists(fn):

@@ -312,7 +312,6 @@ def delete_note(*args):
 def add_content(*args):  # воно ж change_content
     ...
 
-
 def del_content(*args):  # а воно треба??? - а нащо лишати заголовок, тег без контенту?
     ...
 
@@ -444,6 +443,7 @@ def say_hello(*_):
 
 def say_good_bay(*_):
     print(book.write_contacts_to_file(FILENAME))
+    print(notes.write_notes_to_file(NOTE_FILENAME))
     exit("Good bye!")
 
 
