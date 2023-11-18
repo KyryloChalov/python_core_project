@@ -1,6 +1,5 @@
 from collections import UserDict
-from constants import RED, GRAY, CYAN, MAGENTA, RESET, WHITE, LEN_OF_NAME_FIELD
-from datetime import datetime
+from constants import RED, GRAY, CYAN, MAGENTA, YELLOW, RESET, WHITE, LEN_OF_NAME_FIELD
 import os.path
 import pickle
 from classes import Field
@@ -27,12 +26,11 @@ class Content(Field):
 
 class Tags(Field):
     def __init__(self, tags=None):
-        super().__init__(tags or [""])
+        super().__init__(tags)
 
     def add_tags(self, new_tags):
-        # print(f'tags {self.value = }')
         if not self.value:
-            self.value = new_tags
+            self.value = ""  # new_tags
         new_list = list(self.value)
         self.value = new_list + new_tags
 
@@ -59,20 +57,23 @@ class Note:
         self.title = Title(title)
         self.content = Content(content)
         self.tags = Tags(tags) if tags else []
+        print(f"{YELLOW}{     tags = }")
+        print(f"{self.tags = }{RESET}")
 
     def __str__(self) -> str:
         blanks = " " * (LEN_OF_NAME_FIELD - len(str(self.title)))
-        tags_str = ""
-        # print(f"{self.tags = }")
-        if self.tags:
-            tags_str = self.tags
-            # print(f"2. {self.tags = }")
-            tags_str = ", ".join(self.tags)
-            # print(f"1. {tags_str =}")
-            if len(tags_str) > 0:
-                if tags_str[0] == ",":
-                    tags_str = tags_str[2:]
-            # print(f"2. {tags_str =}")
+        # tags_str = ""
+        print(f"  1. {self.tags = }")
+        # if self.tags:
+        # print(f"  2. {self.tags = }")
+        # tags_str = self.tags
+        # print(f"    1. {tags_str = }")
+        tags_str = ", ".join(self.tags)
+        print(f"    2. {tags_str = }")
+        if len(tags_str) > 0:
+            print(f"{len(tags_str) = }")
+            if tags_str[0] == ",":
+                tags_str = tags_str[2:]
         return f"{GRAY}•{RESET}{blanks}{CYAN}{self.title}{RESET}  {GRAY}: {RESET}{self.content} \t{MAGENTA}{tags_str}{RESET}"
 
 
@@ -80,17 +81,15 @@ class NotesBook(UserDict):
     def __init__(self):
         super().__init__()
 
-    def add_note(self, title, content, tags=[""]):
-        # tags += [""]
+    def add_note(self, title, content, tags=None):
         new_note = Note(title, content, tags if tags else [""])
         self.data[title] = new_note
-        # self.data[new_note.name.value] = new_note
         return f"Note '{title}' has been successfully added.\n\t{self.data[title]}"
 
     def edit_note(self, title, new_content):
         if title in self.data:
-            self.data[title] = new_content
-            return f"Note '{title}' edited.\n\t{self.data[title]}"
+            self.data[title].content = new_content
+            return f"Note '{title}' has been successfully edited.\n\t{self.data[title]}"
         else:
             return f"Note '{title}' not found."
 
@@ -102,11 +101,8 @@ class NotesBook(UserDict):
             return f"Note '{title}' not found."
 
     def add_tags(self, title, tags):  # метод для додавання тегів
-        # tags = Tags(tags)
         if title in self.data:
             self.data[title].tags.add_tags(tags)
-            # print(f" tags = {self.data[title].tags}")
-            # print(f" {self.data.tags = }")
             return f"Tags {', '.join(tags)} added to the note with title '{title}'.\n\t{self.data[title]}"
         else:
             raise NoteError(f"Note with title '{title}' not found.")
@@ -125,26 +121,20 @@ class NotesBook(UserDict):
         else:
             raise NoteError(f"Note with title '{title}' not found.")
 
-
     def search_notes(self, search_word):
-        search_word = search_word.lower()
         matching_notes = []
         for title, note in self.data.items():
-            tags_str = ", ".join(self.data[title].tags)
             if any(
                 [
-                    search_word in title.lower(),
-                    search_word in note.content.lower(),
-                    search_word in tags_str,
+                    search_word.lower() in title.lower(),
+                    search_word.lower() in note.content.lower(),
+                    search_word.lower() in " ".join(self.data[title].tags).lower(),
                 ]
             ):
-                matching_notes.append(
-                    f"\t{self.data[title]}"
-                    # f"Note 'Title: {title}' Content: {note.content} Tags:{', '.join(map(str, note.tags.value))}"
-                )
+                matching_notes.append(f"\t{self.data[title]}")
         if matching_notes:
             sorted_notes = sorted(matching_notes)
-            return "\n".join(sorted_notes)
+            return f"data found for your request '{search_word}': \n, {'\n'.join(sorted_notes)}"
         else:
             return f"{RED}nothing was found for your request '{WHITE}{search_word}{RED}'{RESET}"
 

@@ -227,8 +227,8 @@ def add_tag(*args):
     return notes.add_tags(title, tags)
 
 
-def search_notes_by_tag(notes, tag):
-    return notes.search_notes_by_tag(tag)
+# def search_notes_by_tag(notes, tag):
+#     return notes.search_notes_by_tag(tag)
 
 
 @user_error
@@ -256,7 +256,8 @@ def edit_note(title, *args):
     print(f"{new_content = }")
     if title in notes.data:
         # Змінюємо тільки content
-        notes.data[title].content.edit_content(new_content)
+        # notes.data[title].content.edit_content(new_content)
+        return notes.edit_note(title, new_content)
         return f"Note '{title}' changed. New content: '{new_content}'\n\t{notes.data[title]}"
     else:
         return f"note '{title}' not found."
@@ -264,6 +265,7 @@ def edit_note(title, *args):
 
 @user_error
 def search_notes(*args):
+    # зробити перевірку вводу
     result = ""
 
     if not args:
@@ -271,20 +273,14 @@ def search_notes(*args):
 
     search_word = args[0]
 
-    search_result = notes.search_notes(search_word)
-
-    if search_result:
-        result += search_result
-
-    if result:
-        return f"{result}"
-        # return f"{result[:-1]}"
-    else:
-        return f"{RED}nothing was found for your request '{search_word}'{RESET}"
+    return notes.search_notes(search_word)
 
 
 @user_error
 def delete_note(*args):
+    # зробити перевірку вводу
+    if not args:
+        return f"{RED}title is required{RESET}"
     title = args[0]
     return notes.delete_note(title)
 
@@ -299,6 +295,7 @@ def del_content(*args):  # а воно треба??? - а нащо лишати 
 
 @user_error
 def change_tag(*args):
+    # зробити перевірку вводу
     search_title = args[0]
     search_tag = args[1]
     new_tag = args[2]
@@ -307,6 +304,7 @@ def change_tag(*args):
 
 @user_error
 def delete_tag(*args):
+    # зробити перевірку вводу
     search_title = args[0]
     search_tag = args[1]
     return notes.delete_tags(search_title, search_tag)
