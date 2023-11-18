@@ -20,14 +20,14 @@ if __name__ == "__main__":
     print(GREEN + "     створюємо нову нотатку з #tag" + RESET)
     print(add_note("first", "If you don’t have ", "#3"))
 
-    # print(GREEN + "      видаляємо нотатку"  + RESET)
-    # print(delete_note("first"))
+    print(GREEN + "      видаляємо нотатку"  + RESET)
+    print(delete_note("first"))
 
-    # print(GREEN + "     створюємо нову нотатку з #tag" + RESET)
-    # print(add_note("first", "If you don’t have ", "#3"))
+    print(GREEN + "     створюємо нову нотатку з #tag" + RESET)
+    print(add_note("first", "If you don’t have ", "#3"))
 
-    # print(GREEN + "     створюємо нову нотатку з двома #tags" + RESET)
-    # print(add_note("second", "If you don’t have ", "#3", "#5"))
+    print(GREEN + "     створюємо нову нотатку з двома #tags" + RESET)
+    print(add_note("second", "If you don’t have ", "#3", "#5"))
 
     print(GREEN + "     додаємо #tags" + RESET)
     print(add_tag("000", "#8"))
