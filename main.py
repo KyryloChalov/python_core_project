@@ -23,6 +23,7 @@ from constants import (
     HELP_LIST_PHONE,
     HELP_LIST_NOTE,
     HELP_LIST_FIND,
+    PROMPT_COMMANDS,
     RED,
     BLUE,
     YELLOW,
@@ -218,7 +219,7 @@ def name_find(*args):
     return book.find_name(args[0])
 
 
-# --- Notes
+# =================== Notes begin =========================
 @user_error
 def add_tag(*args):
     title = args[0]
@@ -230,20 +231,12 @@ def search_notes_by_tag(notes, tag):
     return notes.search_notes_by_tag(tag)
 
 
-# @user_error
-# def search_notes_by_tag(*args):
-#     tag = args[0]
-#     sort_by_keywords = args[1:].lower() == "true" if len(args) > 1 else False
-#     return notes.search_notes_by_tag(tag, sort_by_keywords)
-
-
 @user_error
 def add_note(*args):
     title = args[0]
     content_start_index = 1
     tags = []
 
-    # теги в аргументах
     content_words = []
     for arg in args[content_start_index:]:
         if arg.startswith("#"):
@@ -269,19 +262,6 @@ def edit_note(title, *args):
         return f"note '{title}' not found."
 
 
-# @user_error
-# def search_notes(keyword, notes):
-#     matching_notes = [
-#         f"Note 'Title: {title}' Content: {note.content} Tags:{', '.join(note.tags)}"
-#         for title, note in notes.items()
-#         if keyword.lower() in title.lower() or keyword.lower() in note.content.lower()
-#     ]
-#     if matching_notes:
-#         return "\n".join(matching_notes)
-#     else:
-#         return "No matching notes found."
-
-
 @user_error
 def search_notes(*args):
     result = ""
@@ -289,9 +269,9 @@ def search_notes(*args):
     if not args:
         return f"{RED}searching string is required{RESET}"
 
-    keyword_or_tags = args[0]
+    search_word = args[0]
 
-    search_result = notes.search_notes(keyword_or_tags)
+    search_result = notes.search_notes(search_word)
 
     if search_result:
         result += search_result
@@ -300,7 +280,7 @@ def search_notes(*args):
         return f"{result}"
         # return f"{result[:-1]}"
     else:
-        return f"{RED}nothing was found for your request '{keyword_or_tags}'{RESET}"
+        return f"{RED}nothing was found for your request '{search_word}'{RESET}"
 
 
 @user_error
@@ -311,6 +291,7 @@ def delete_note(*args):
 
 def add_content(*args):  # воно ж change_content
     ...
+
 
 def del_content(*args):  # а воно треба??? - а нащо лишати заголовок, тег без контенту?
     ...
@@ -331,7 +312,7 @@ def delete_tag(*args):
     return notes.delete_tags(search_title, search_tag)
 
 
-# --- Notes end
+# =================== Notes end =========================
 
 
 @user_error
@@ -525,61 +506,21 @@ def parser(text: str):
 
 
 def func_completer(CMD):
-    comp_dict = {}
+    prompt_dict = {}
+
+    prompt_command = PROMPT_COMMANDS
+    for i in prompt_command:
+        prompt_dict.update({i: None})
+
     # sorted_command = []
     # for i in CMD.values():
     #     for k in i:
     #         sorted_command.append(k)
-    sorted_command = [
-        # 'add_record',
-        "add_contact",
-        "add_phone",
-        # "add_phones",
-        "add_birthday",
-        "add_address",
-        "add_email",
-        "add_note",
-        "add_tag",
-        "change_birthday",
-        "change_address",
-        "change_name",
-        # "change_address",
-        "change_phone",
-        "change_email",
-        "change_note",
-        "change_tag",
-        "edit_birthday",
-        "edit_address",
-        "edit_name",
-        "edit_phone",
-        "edit_email",
-        "edit_note",
-        "edit_tag",
-        "delete_contact",
-        "delete_phone",
-        # "delete_record",
-        "delete_address",
-        "delete_email",
-        "delete_note",
-        "delete_tag",
-        "find_name",
-        "birthdays",
-        "search",
-        "find_any",
-        "help",
-        "show",
-        "list",
-        "show_notes",
-        "list_notes",
-        "search_notes",
-        "exit",
-        "close",
-        "sort_path",
-    ]
-    for i in sorted_command:
-        # print(f"'{i}',")
-        comp_dict.update({i: None})
-    return comp_dict
+    # for i in sorted_command:
+    #     # print(f"'{i}',")
+    #     prompt_dict.update({i: None})
+
+    return prompt_dict
 
 
 completer = NestedCompleter.from_nested_dict(func_completer(COMMANDS))
