@@ -27,11 +27,13 @@ class Content(Field):
 
 class Tags(Field):
     def __init__(self, tags=None):
-        super().__init__(tags or [])
+        super().__init__(tags or [""])
 
     def add_tags(self, new_tags):
+        # print(f'tags {self.value = }')
         if not self.value:
             self.value = new_tags
+        
         new_list = list(self.value)
         self.value = new_list + new_tags
 
@@ -61,14 +63,17 @@ class Note:
 
     def __str__(self) -> str:
         blanks = " " * (LEN_OF_NAME_FIELD - len(str(self.title)))
-        # tags_str = f"Tags {''.join(t for t in self.tags)}" if len(self.tags)>0 else ""
         tags_str = ""
         # print(f"{self.tags = }")
         if self.tags:
             tags_str = self.tags
-            # print(f"{self.tags = }")
+            # print(f"2. {self.tags = }")
             tags_str = ", ".join(self.tags)
-            # print(f"{tags_str = }")
+            # print(f"1. {tags_str =}")
+            if len(tags_str) > 0: 
+                    if tags_str[0] == ",":
+                        tags_str = tags_str[2:]
+            # print(f"2. {tags_str =}")
         return f"{GRAY}•{RESET}{blanks}{CYAN}{self.title}{RESET}  {GRAY}: {RESET}{self.content} \t{MAGENTA}{tags_str}{RESET}"
 
 
@@ -76,8 +81,9 @@ class NotesBook(UserDict):
     def __init__(self):
         super().__init__()
 
-    def add_note(self, title, content, tags):
-        new_note = Note(title, content, tags if tags else None)
+    def add_note(self, title, content, tags=[""]):
+        # tags += [""]
+        new_note = Note(title, content, tags if tags else [""])
         self.data[title] = new_note
         # self.data[new_note.name.value] = new_note
         return f"Note '{title}' has been successfully added.\n\t{self.data[title]}"
@@ -97,8 +103,12 @@ class NotesBook(UserDict):
             return f"Note '{title}' not found."
 
     def add_tags(self, title, tags):  # метод для додавання тегів
+        # tags = Tags(tags)
         if title in self.data:
             self.data[title].tags.add_tags(tags)
+            # if self.data[title].tags[0] == "":
+            # print(f" tags = {self.data[title].tags}")
+            # print(f" {self.data.tags = }")
             return f"Tags {', '.join(tags)} added to the note with title '{title}'.\n\t{self.data[title]}"
         else:
             raise NoteError(f"Note with title '{title}' not found.")
@@ -141,6 +151,8 @@ class NotesBook(UserDict):
     def search_notes(self, keywords_or_tag):
         matching_notes = []
         for title, note in self.data.items():
+            print(f"      {keywords_or_tag = }")
+            print(f"{type(keywords_or_tag) = }")
             if (
                 (
                     isinstance(keywords_or_tag, str)
@@ -166,7 +178,6 @@ class NotesBook(UserDict):
             return "\n".join(sorted_notes)
         else:
             return f"{RED}nothing was found for your request '{WHITE}{keywords_or_tag}{RED}'{RESET}"
-
 
     def read_notes_from_file(self, fn):
         if os.path.exists(fn):
