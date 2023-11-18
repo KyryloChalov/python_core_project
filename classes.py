@@ -258,7 +258,9 @@ class Record:
                 return False
 
     def __str__(self) -> str:
-        blanks = GRAY + "." * (LEN_OF_NAME_FIELD - len(str(self.name)) - 1) + " " + RESET
+        blanks = (
+            GRAY + "." * (LEN_OF_NAME_FIELD - len(str(self.name))) + " " + RESET
+        )
         name_str = f"{self.name} {blanks}: "
         phone_str = f"{', '.join(str(p) for p in self.phones)}"
         if phone_str != "":  # так, це милиця - не чіпати!
@@ -288,7 +290,7 @@ class Record:
         address_str = str(self.address) if self.address else ""
 
         new_line = (
-            "\n" + (" " * (LEN_OF_NAME_FIELD + 3))
+            "\n" + (" " * (LEN_OF_NAME_FIELD + 4))
             if all([phone_str.strip() + bd_str != "", emails_str + address_str != ""])
             else ""
         )
@@ -309,29 +311,11 @@ class AddressBook(UserDict):
         for key in self.data:
             if str(key) == str(name):
                 rec: Record = self.get(key)
-        new_record = Record(
-            Name(new_name),
-            birthday=rec.datetime_to_str(rec.birthday) if rec.birthday else None,
-            # address = str(rec.address) if rec.address else None,
-        )
-
-        print(f"{rec = }")
-        print(f"{rec.emails = }")
-        print(f"{rec.address = }")
-
-        for phone in rec.phones:
-            new_record.add_phone(phone)
-
-        
-        # for email in rec.emails:        #
-        #     new_record.add_email(email) #
+        new_record = Record(Name(new_name))
+        new_record.birthday = rec.birthday
+        new_record.phones = rec.phones
         new_record.emails = rec.emails
-            
         new_record.address = rec.address
-            
-        print(f"{new_record = }")
-        print(f"{new_record.emails = }")
-        print(f"{new_record.address = }")
 
         self.add_record(new_record)
         self.delete_record(name)

@@ -8,6 +8,7 @@ from main import (
     change_tag,
     delete_tag,
     search_notes,
+    edit_note,
 )
 
 
@@ -20,7 +21,7 @@ if __name__ == "__main__":
     print(GREEN + "     створюємо нову нотатку з #tag" + RESET)
     print(add_note("first", "If you don’t have ", "#3"))
 
-    print(GREEN + "      видаляємо нотатку"  + RESET)
+    print(GREEN + "      видаляємо нотатку" + RESET)
     print(delete_note("first"))
 
     print(GREEN + "     створюємо нову нотатку з #tag" + RESET)
@@ -32,7 +33,7 @@ if __name__ == "__main__":
     print(GREEN + "     додаємо #tags" + RESET)
     print(add_tag("000", "#8"))
 
-    print(GREEN + "     додаємо #tags" + RESET)
+    print(GREEN + "     видаляємо #tags" + RESET)
     print(delete_tag("000", "#8"))
 
     print(GREEN + "     додаємо #tags" + RESET)
@@ -43,8 +44,18 @@ if __name__ == "__main__":
 
     print(GREEN + "     додаємо #tags" + RESET)
     print(add_tag("000", "#88"))
-    
-    print(show_notes())
 
     print(GREEN + "     шукаємо #tags" + RESET)
-    print(search_notes("DoN"))
+    print(search_notes("3"))
+
+    print(GREEN + "     видаляємо #tags" + RESET)
+    print(delete_tag("first", "#3"))
+
+    print(GREEN + "     додаємо #tags" + RESET)
+    print(add_tag("first", "#888"))
+    
+    print(GREEN + "     міняємо content" + RESET)
+    print(edit_note("first", "kjhg kjhgf kjhgf 000 fgf"))
+
+    print(GREEN + "     друкуємо всі notes" + RESET)
+    # print(show_notes())
