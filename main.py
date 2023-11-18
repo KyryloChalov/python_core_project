@@ -220,95 +220,63 @@ def name_find(*args):
 
 
 # =================== Notes begin =========================
+
+@user_error
+def add_note(*args):
+    if any([not args, len(args) < 2]):
+        return f"{RED}not enough params \n\t{WHITE}format: 'add_note <title> <content> {GRAY}<#tags>{WHITE}'{RESET}"
+    tags = []
+    content_list = []
+    for arg in args[1:]:
+        if arg.startswith("#"):
+            tags.append(arg)
+        else:
+            content_list.append(arg)
+    return notes.add_note(args[0], " ".join(content_list), tags)
+
+
 @user_error
 def add_tag(*args):
+    if any([not args, len(args) < 2]):
+        return f"{RED}not enough params \n\t{WHITE}format: 'add_note <title> <#tags>'{RESET}"
     title = args[0]
     tags = list(args[1:])
     return notes.add_tags(title, tags)
 
 
-# def search_notes_by_tag(notes, tag):
-#     return notes.search_notes_by_tag(tag)
-
-
 @user_error
-def add_note(*args):
-    title = args[0]
-    content_start_index = 1
-    tags = []
-
-    content_words = []
-    for arg in args[content_start_index:]:
-        if arg.startswith("#"):
-            tags.append(arg)
-        else:
-            content_words.append(arg)
-
-    content = " ".join(content_words)
-
-    return notes.add_note(title, content, tags)
-
-
-@user_error
-def edit_note(title, *args):
-    # Перевірка наявності тайтлу в
-    new_content = " ".join(args)
-    print(f"{new_content = }")
-    if title in notes.data:
-        # Змінюємо тільки content
-        # notes.data[title].content.edit_content(new_content)
-        return notes.edit_note(title, new_content)
-        return f"Note '{title}' changed. New content: '{new_content}'\n\t{notes.data[title]}"
-    else:
-        return f"note '{title}' not found."
-
-
-@user_error
-def search_notes(*args):
-    # зробити перевірку вводу
-    result = ""
-
-    if not args:
-        return f"{RED}searching string is required{RESET}"
-
-    search_word = args[0]
-
-    return notes.search_notes(search_word)
-
-
-@user_error
-def delete_note(*args):
-    # зробити перевірку вводу
-    if not args:
-        return f"{RED}title is required{RESET}"
-    title = args[0]
-    return notes.delete_note(title)
-
-
-def add_content(*args):  # воно ж change_content
-    ...
-
-
-def del_content(*args):  # а воно треба??? - а нащо лишати заголовок, тег без контенту?
-    ...
+def edit_note(*args):
+    if any([not args, len(args) < 2]):
+        return f"{RED}not enough params\n\t{WHITE}format: 'edit_note <title> <new_content>'{RESET}"
+    return notes.edit_note(args[0], " ".join(args[1:]))
 
 
 @user_error
 def change_tag(*args):
-    # зробити перевірку вводу
-    search_title = args[0]
-    search_tag = args[1]
-    new_tag = args[2]
-    return notes.change_tags(search_title, search_tag, new_tag)
+    if any([not args, len(args) < 3]):
+        return f"{RED}not enough params\n\t{WHITE}format: 'change_tag <title> <#old_tag> <#new_tag>'{RESET}"
+    return notes.change_tags(args[0], args[1], args[2])
+
+
+@user_error
+def delete_note(*args):
+    if not args:
+        return f"{RED}title is required{RESET}\n\t{WHITE}format: 'delete_note <title>'{RESET}"
+    return notes.delete_note(args[0])
 
 
 @user_error
 def delete_tag(*args):
-    # зробити перевірку вводу
-    search_title = args[0]
-    search_tag = args[1]
-    return notes.delete_tags(search_title, search_tag)
+    if any([not args, len(args) < 2]):
+        return f"{RED}not enough params\n\t{WHITE}format: 'delete_tag <title> <#tag>'{RESET}"
+    return notes.delete_tags(args[0], args[1])
 
+
+@user_error
+def search_notes(*args):
+    if not args:
+        return f"{RED}searching string is required{RESET}\n\t{WHITE}format: 'search_notes <search_string>'{RESET}"
+    return notes.search_notes(args[0])
 
 # =================== Notes end =========================
 
