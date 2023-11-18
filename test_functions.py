@@ -16,7 +16,8 @@ from main import (
     add_email,
     birthday,
 )
-from get_birthday_on_date import get_birthdays_on_date
+
+# from get_birthday_on_date import get_birthdays_on_date
 
 # =============================================
 #             test 2 (functions)
@@ -182,3 +183,8 @@ if __name__ == "__main__":
 
     print(birthday(7))
     # print(help_page())
+
+    print(GREEN + "\n     міняємо ім'я існуючого контакту!" + RESET)
+    print(change_name("Person_5", "Jill_5"))
+
+    print(show_all())
