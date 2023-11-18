@@ -57,21 +57,11 @@ class Note:
         self.title = Title(title)
         self.content = Content(content)
         self.tags = Tags(tags) if tags else []
-        print(f"{YELLOW}{     tags = }")
-        print(f"{self.tags = }{RESET}")
 
     def __str__(self) -> str:
         blanks = " " * (LEN_OF_NAME_FIELD - len(str(self.title)))
-        # tags_str = ""
-        print(f"  1. {self.tags = }")
-        # if self.tags:
-        # print(f"  2. {self.tags = }")
-        # tags_str = self.tags
-        # print(f"    1. {tags_str = }")
         tags_str = ", ".join(self.tags)
-        print(f"    2. {tags_str = }")
         if len(tags_str) > 0:
-            print(f"{len(tags_str) = }")
             if tags_str[0] == ",":
                 tags_str = tags_str[2:]
         return f"{GRAY}•{RESET}{blanks}{CYAN}{self.title}{RESET}  {GRAY}: {RESET}{self.content} \t{MAGENTA}{tags_str}{RESET}"

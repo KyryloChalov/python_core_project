@@ -486,7 +486,7 @@ COMMANDS = {
     say_good_bay: ("exit", "good_bay", "by", "close", "end"),
     contact: ("contact", "help_contact", "help_record"),
     phone: ("phone", "help_phone"),
-    note: ("note", "help_note"),
+    note: ("note", "notes", "help_note", "help_notes"),
     find: ("find",),
     sorting: ("sorting", "sort_path"),
 }

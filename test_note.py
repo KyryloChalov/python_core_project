@@ -53,9 +53,12 @@ if __name__ == "__main__":
 
     print(GREEN + "     додаємо #tags" + RESET)
     print(add_tag("first", "#888"))
-    
+
     print(GREEN + "     міняємо content" + RESET)
     print(edit_note("first", "kjhg kjhgf kjhgf 000 fgf"))
 
+    print(GREEN + "     шукаємо #tags" + RESET)
+    print(search_notes("000"))
+
     print(GREEN + "     друкуємо всі notes" + RESET)
-    # print(show_notes())
+    print(show_notes())
